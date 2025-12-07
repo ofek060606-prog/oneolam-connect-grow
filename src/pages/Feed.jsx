@@ -9,7 +9,7 @@ import { Bell, Search, MessageSquare } from 'lucide-react';
 import { CreatePost } from '../components/feed/CreatePost';
 import { StoryViewer } from '../components/shared/StoryViewer';
 
-export const Feed = ({ onChatClick }) => {
+export default function Feed({ onChatClick }) {
   const [posts, setPosts] = useState([]);
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -156,4 +156,4 @@ export const Feed = ({ onChatClick }) => {
       )}
     </>
   );
-};
+}

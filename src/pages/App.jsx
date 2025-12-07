@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { BottomNavigation } from "../components/BottomNavigation";
-import { Feed } from "../components/Feed";
+import Feed from "./Feed";
 import Explore from "../components/Explore";
 import { Chat } from "../components/Chat";
 import { Profile } from "../components/Profile";
