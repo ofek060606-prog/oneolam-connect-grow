@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Community, Post } from '@/entities/all';
-import { Search, RefreshCw, Sparkles, Plus } from 'lucide-react';
+import { Search, RefreshCw, Sparkles, Plus, Users } from 'lucide-react';
 import { useTranslation } from './utils/i18n';
 import { CommunityHorizontalCard } from './explore/CommunityHorizontalCard';
 import { TrendingPostCard } from './explore/TrendingPostCard';
+import { UserCard } from './explore/UserCard';
 import { toast } from 'sonner';
 
 // Cache management helpers
@@ -62,7 +62,7 @@ const retryWithBackoff = async (fn, maxRetries = 2, baseDelay = 3000) => {
   throw new Error('Rate limit exceeded - please try again in a few minutes');
 };
 
-export const Explore = () => {
+export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [communities, setCommunities] = useState([]);
@@ -513,4 +513,4 @@ export const Explore = () => {
       </div>
     </div>
   );
-};
+}
