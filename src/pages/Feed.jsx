@@ -138,7 +138,7 @@ export default function Feed({ onChatClick }) {
                 <PostCard
                   key={post.id}
                   post={post}
-                  onChatClick={() => onChatClick(post.created_by, post.author_name)}
+                  onChatClick={post?.created_by && post?.author_name ? () => onChatClick(post.created_by, post.author_name) : undefined}
                   onDelete={handlePostDeleted}
                 />
               ))
