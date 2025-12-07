@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Community, Post } from '@/entities/all'; // Added Post entity import
 import { Search, RefreshCw, Users, Sparkles } from 'lucide-react';
@@ -41,7 +40,7 @@ const CommunityCard = ({ community, onClick }) => {
   )
 };
 
-export const Explore = ({ onChatClick }) => {
+export default function Explore({ onChatClick }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [communities, setCommunities] = useState([]);
