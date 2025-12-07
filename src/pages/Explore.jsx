@@ -218,4 +218,4 @@ export default function Explore({ onChatClick }) {
       </div>
     </div>
   );
-};
+}
