@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Heart, MessageCircle, Share, Bookmark, MoreHorizontal, Trash2, Flag } from 'lucide-react';
 import { Like, SavedPost, Comment, User, Post } from '@/entities/all';
@@ -157,8 +156,8 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
         // Save
         await SavedPost.create({
           post_id: post.id,
-          post_title: post.content.substring(0, 50) + (post.content.length > 50 ? '...' : ''),
-          post_author: post.author_name,
+          post_title: (post.content || '').substring(0, 50) + ((post.content?.length || 0) > 50 ? '...' : ''),
+          post_author: post.author_name || 'Unknown',
           post_image: post.image_url
         });
         setIsSaved(true);
@@ -218,15 +217,15 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
       // דיווח מתקדם יותר עם פרטים
       const reportDetails = {
         post_id: post.id,
-        post_content: post.content.substring(0, 100),
-        post_author: post.author_name,
+        post_content: (post.content || '').substring(0, 100),
+        post_author: post.author_name || 'Unknown',
         reason: reason,
         reporter_ip: 'hidden_for_privacy',
         timestamp: new Date().toISOString()
       };
 
-      await sendSecurityAlert('content_report', post.created_by, post.author_name, 
-        `Post reported by ${currentUser.full_name}. Reason: ${reason}. Post content: "${post.content.substring(0, 100)}..."`);
+      await sendSecurityAlert('content_report', post.created_by, post.author_name || 'Unknown', 
+        `Post reported by ${currentUser.full_name}. Reason: ${reason}. Post content: "${(post.content || '').substring(0, 100)}..."`);
 
       toast.success(t('postReported'));
     } catch (error) {
@@ -237,7 +236,7 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
 
   const handleShare = async () => {
     // Construct a shareable text and URL based on the post
-    const shareText = `Check out this post by ${post.author_name}: ${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}`;
+    const shareText = `Check out this post by ${post.author_name || 'someone'}: ${post.content?.substring(0, 100) || 'this content'}${post.content?.length > 100 ? '...' : ''}`;
     // Assuming the current page URL might be relevant, or construct a specific post URL if available
     const shareUrl = window.location.href; // Or a more specific URL like `${window.location.origin}/post/${post.id}`
 
@@ -296,7 +295,7 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
   };
 
   const handleChatClick = () => {
-    if (onChatClick) {
+    if (onChatClick && post.created_by && post.author_name) {
       onChatClick(post.created_by, post.author_name);
     }
   };
@@ -309,12 +308,12 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
       <div className="flex items-center justify-between p-4">
         <div onClick={handleAuthorClick} className="flex items-center space-x-3 cursor-pointer">
           <img
-            src={post.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name)}&background=random&size=40`}
-            alt={post.author_name}
+            src={post.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name || 'User')}&background=random&size=40`}
+            alt={post.author_name || 'User'}
             className="w-10 h-10 rounded-full object-cover border-2 border-blue-100"
           />
           <div>
-            <h3 className="font-semibold text-slate-900">{post.author_name}</h3>
+            <h3 className="font-semibold text-slate-900">{post.author_name || 'Unknown User'}</h3>
             <p className="text-xs text-slate-500">
               {post.community_name && <span className="text-blue-600">{post.community_name} • </span>}
               {formatRelativeTime(post.created_date)}
@@ -326,7 +325,7 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
 
       {/* Content */}
       <div onClick={handlePostClick} className="px-4 pb-3 cursor-pointer">
-        <p className="text-slate-800 leading-relaxed">{post.content}</p>
+        <p className="text-slate-800 leading-relaxed">{post.content || ''}</p>
         {/* Retaining hashtags display as per the request title */}
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
