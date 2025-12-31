@@ -69,6 +69,10 @@ export default function Feed({ onChatClick }) {
     setViewingStory(story);
   };
 
+  const handleCreateStory = () => {
+    window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'create-story' } }));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
@@ -116,7 +120,7 @@ export default function Feed({ onChatClick }) {
           {/* Stories */}
           <div className="mb-6">
             <div className="flex space-x-4 overflow-x-auto pb-3">
-              <StoryCircle isCreate={true} />
+              <StoryCircle isCreate={true} onClick={handleCreateStory} />
               {stories.map(story => (
                 <StoryCircle key={story.id} story={story} onClick={() => handleStoryClick(story)} />
               ))}
