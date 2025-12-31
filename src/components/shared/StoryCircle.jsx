@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-export const StoryCircle = ({ story, isOwn = false, onClick }) => {
+export const StoryCircle = ({ story, isOwn = false, isCreate = false, onClick }) => {
   const gradientColors = [
     'from-pink-500 to-orange-500',
     'from-purple-500 to-pink-500', 
@@ -23,7 +23,7 @@ export const StoryCircle = ({ story, isOwn = false, onClick }) => {
     return gradientColors[Math.abs(hash) % gradientColors.length];
   };
 
-  if (isOwn) {
+  if (isCreate) {
     return (
       <div 
         onClick={onClick}
@@ -33,10 +33,14 @@ export const StoryCircle = ({ story, isOwn = false, onClick }) => {
           <Plus className="w-8 h-8 text-white" />
         </div>
         <span className="text-xs font-medium text-slate-700 text-center leading-tight max-w-16">
-          {story.author_name}
+          Your Story
         </span>
       </div>
     );
+  }
+
+  if (!story || !story.author_name) {
+    return null; // Don't render if story is invalid
   }
 
   const gradientClass = getGradientColor(story.author_name);
