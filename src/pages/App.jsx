@@ -76,58 +76,11 @@ function AppRouter() {
   const [showHashtagPosts, setShowHashtagPosts] = useState(null);
   const [showDailyWordsQuiz, setShowDailyWordsQuiz] = useState(false); // Add new state for the quiz page
 
-  // ONE-TIME CLEANUP SCRIPT
+  // Cleanup script disabled to prevent blocking
   useEffect(() => {
-    const runCleanup = async () => {
-      const hasRun = localStorage.getItem('hasRunV1Cleanup');
-      if (hasRun) {
-        return;
-      }
-
-      toast.loading("Performing initial database cleanup...");
-
-      try {
-        const allPosts = await Post.list(undefined, 1000); // Fetch up to 1000 posts
-        const allStories = await Story.list(undefined, 1000); // Fetch up to 1000 stories
-
-        let postsDeleted = 0;
-        let storiesDeleted = 0;
-
-        for (const post of allPosts) {
-          if (isDemoContent(post)) {
-            try {
-              await Post.delete(post.id);
-              postsDeleted++;
-            } catch (e) {
-              console.warn(`Failed to delete post ${post.id}:`, e);
-              /* ignore - continue with other deletions even if one fails */
-            }
-          }
-        }
-
-        for (const story of allStories) {
-          if (isDemoContent(story)) {
-            try {
-              await Story.delete(story.id);
-              storiesDeleted++;
-            } catch (e) {
-              console.warn(`Failed to delete story ${story.id}:`, e);
-              /* ignore - continue with other deletions even if one fails */
-            }
-          }
-        }
-
-        toast.success(`Cleanup complete! Removed ${postsDeleted} posts and ${storiesDeleted} stories.`);
-        localStorage.setItem('hasRunV1Cleanup', 'true');
-
-      } catch (error) {
-        toast.error("Cleanup failed. Some demo content may remain.");
-        console.error("Cleanup script failed:", error);
-      }
-    };
-
-    runCleanup();
-  }, []); // Run only once on mount
+    // Mark as run so it doesn't try again
+    localStorage.setItem('hasRunV1Cleanup', 'true');
+  }, []);
 
   // Scroll to top when navigating
   const scrollToTop = () => {
