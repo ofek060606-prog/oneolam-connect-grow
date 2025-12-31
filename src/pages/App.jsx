@@ -119,8 +119,6 @@ function AppRouter() {
 
         toast.success(`Cleanup complete! Removed ${postsDeleted} posts and ${storiesDeleted} stories.`);
         localStorage.setItem('hasRunV1Cleanup', 'true');
-        // Force a reload to ensure all components fetch clean data
-        window.location.reload();
 
       } catch (error) {
         toast.error("Cleanup failed. Some demo content may remain.");
