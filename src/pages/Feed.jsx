@@ -134,7 +134,7 @@ export default function Feed({ onChatClick }) {
                 <p>{t('feed.noPosts.subtitle')}</p>
               </div>
             ) : (
-              posts.map((post) => (
+              posts.filter(post => post && post.id).map((post) => (
                 <PostCard
                   key={post.id}
                   post={post}
