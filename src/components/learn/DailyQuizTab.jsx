@@ -302,6 +302,6 @@ export const DailyQuizTab = () => {
           )}
         </Button>
       )}
-    </</div>
+    </div>
   );
 };
