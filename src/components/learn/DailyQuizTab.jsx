@@ -158,17 +158,20 @@ export const DailyQuizTab = () => {
   if (!quizStarted) {
     return (
       <div className="text-center py-8">
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-2xl mb-6 border border-blue-100">
-          <BookOpen className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-900 mb-2">{t('quizOnLearnedWords')}</h3>
-          <p className="text-slate-600 mb-4">{t('testYourKnowledge5Questions')}</p>
+        <div className="bg-gradient-to-br from-emerald-100 to-teal-100 p-10 rounded-3xl mb-6 border-2 border-emerald-300 shadow-lg">
+          <div className="bg-white/80 backdrop-blur-sm w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BookOpen className="w-10 h-10 text-emerald-600" />
+          </div>
+          <h3 className="text-2xl font-bold text-emerald-900 mb-3">{t('quizOnLearnedWords')}</h3>
+          <p className="text-emerald-700 text-lg mb-2">{t('testYourKnowledge5Questions')}</p>
+          <p className="text-emerald-600 text-sm">🎯 Test yourself and track your progress!</p>
         </div>
         <div className="flex gap-3 justify-center">
-          <Button onClick={startQuiz} className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-6 text-lg rounded-xl">
-            {t('startQuiz')}
+          <Button onClick={startQuiz} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-10 py-7 text-xl rounded-2xl shadow-xl font-bold transform hover:scale-105 transition-all">
+            🚀 {t('startQuiz')}
           </Button>
-          <Button onClick={startQuiz} variant="outline" className="px-6 py-6 text-lg rounded-xl">
-            <RefreshCw className="w-5 h-5" />
+          <Button onClick={startQuiz} variant="outline" className="px-7 py-7 text-lg rounded-2xl border-2 border-emerald-300 hover:bg-emerald-50">
+            <RefreshCw className="w-6 h-6 text-emerald-600" />
           </Button>
         </div>
       </div>
