@@ -197,7 +197,7 @@ export default function DailyWordsQuizPage({ onBack }) {
     window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'payment' } }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     // Premium users see all 15 words, free users see 5.
     const isPremium = user?.subscription_tier === 'premium';
     const totalWordsForWeek = words.length; // This will be max 15
@@ -205,6 +205,39 @@ export default function DailyWordsQuizPage({ onBack }) {
     
     if (currentWordIndex < viewableLimit - 1) {
       setCurrentWordIndex(prev => prev + 1);
+      await updateWordProgress(currentWordIndex + 1);
+    }
+  };
+
+  const updateWordProgress = async (wordCount) => {
+    if (!user) return;
+    
+    try {
+      const progress = await User.LearningProgress.filter({ user_email: user.email });
+      const today = new Date().toISOString().split('T')[0];
+      
+      if (progress && progress.length > 0) {
+        const currentProgress = progress[0];
+        const lastUpdated = currentProgress.updated_date ? new Date(currentProgress.updated_date).toISOString().split('T')[0] : null;
+        
+        // Only update if it's a new word being learned
+        if (wordCount > (currentProgress.current_session_words || 0)) {
+          await User.LearningProgress.update(currentProgress.id, {
+            total_words_learned: (currentProgress.total_words_learned || 0) + 1,
+            current_session_words: wordCount,
+            streak_count: lastUpdated === today ? currentProgress.streak_count : (currentProgress.streak_count || 0) + 1
+          });
+        }
+      } else {
+        await User.LearningProgress.create({
+          user_email: user.email,
+          total_words_learned: 1,
+          current_session_words: 1,
+          streak_count: 1
+        });
+      }
+    } catch (error) {
+      console.error('Error updating word progress:', error);
     }
   };
 

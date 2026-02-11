@@ -107,19 +107,31 @@ export const DailyQuizTab = () => {
       const user = await User.me();
       const progress = await LearningProgress.filter({ user_email: user.email });
       
+      const today = new Date().toISOString().split('T')[0];
+      
       if (progress && progress.length > 0) {
         const currentProgress = progress[0];
+        const lastUpdated = currentProgress.updated_date ? new Date(currentProgress.updated_date).toISOString().split('T')[0] : null;
+        
+        // Only update streak if it's a new day
+        const newStreak = lastUpdated === today ? currentProgress.streak_count : (currentProgress.streak_count || 0) + 1;
+        
         await LearningProgress.update(currentProgress.id, {
-          total_words_learned: (currentProgress.total_words_learned || 0) + score,
-          streak_count: (currentProgress.streak_count || 0) + 1
+          streak_count: newStreak,
+          last_quiz_score: score,
+          last_quiz_date: today
         });
       } else {
         await LearningProgress.create({
           user_email: user.email,
-          total_words_learned: score,
-          streak_count: 1
+          total_words_learned: 0,
+          streak_count: 1,
+          last_quiz_score: score,
+          last_quiz_date: today
         });
       }
+      
+      toast.success(`Quiz completed! Score: ${score}/${quizWords.length}`);
     } catch (error) {
       console.error('Error updating progress:', error);
     }
