@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HebrewWord, User } from '@/entities/all';
 import { ArrowLeft, RefreshCw, ChevronRight, ChevronLeft, Trophy } from 'lucide-react';
@@ -152,8 +151,8 @@ export default function DailyWordsQuizPage({ onBack }) {
         return valA - valB;
       });
 
-      // Limit the weekly pool to exactly 15 words.
-      let finalWords = shuffledWords.slice(0, 15);
+      // Take up to 15 words, or all available if less
+      let finalWords = shuffledWords.slice(0, Math.min(15, shuffledWords.length));
 
       if (selectedCategory === 'Numbers') {
         const numberOrder = [
@@ -164,7 +163,12 @@ export default function DailyWordsQuizPage({ onBack }) {
         // Use the unique list to find our numbers, then sort and slice.
         let numberWords = uniqueWords.filter(w => numberOrder.includes(w.word));
         numberWords.sort((a, b) => numberOrder.indexOf(a.word) - numberOrder.indexOf(b.word));
-        finalWords = numberWords.slice(0, 15);
+        finalWords = numberWords.slice(0, Math.min(15, numberWords.length));
+      }
+      
+      // Show message if category has less than expected words
+      if (finalWords.length < 15) {
+        console.log(`Category has only ${finalWords.length} unique words available`);
       }
 
       setWords(finalWords);
@@ -212,7 +216,7 @@ export default function DailyWordsQuizPage({ onBack }) {
 
   const isPremium = user?.subscription_tier === 'premium';
   const totalWordsForWeek = words.length; 
-  const viewableLimit = isPremium ? totalWordsForWeek : 5; 
+  const viewableLimit = isPremium ? totalWordsForWeek : Math.min(5, totalWordsForWeek); 
   const isAtLimit = currentWordIndex >= viewableLimit - 1;
 
   if (isLoading) {
@@ -281,7 +285,7 @@ export default function DailyWordsQuizPage({ onBack }) {
               </Button>
             </div>
 
-            {!isPremium && isAtLimit && totalWordsForWeek > 5 && (
+            {!isPremium && isAtLimit && totalWordsForWeek > viewableLimit && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
