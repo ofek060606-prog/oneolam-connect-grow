@@ -65,7 +65,7 @@ export default function LearnPage() {
         </div>
 
         {/* Daily Quiz Section */}
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl shadow-xl p-6 border-2 border-emerald-200">
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg p-4 border-2 border-emerald-200">
           <DailyQuizTab />
         </div>
       </div>

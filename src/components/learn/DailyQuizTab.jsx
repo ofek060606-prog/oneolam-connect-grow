@@ -157,21 +157,21 @@ export const DailyQuizTab = () => {
 
   if (!quizStarted) {
     return (
-      <div className="text-center py-8">
-        <div className="bg-gradient-to-br from-emerald-100 to-teal-100 p-10 rounded-3xl mb-6 border-2 border-emerald-300 shadow-lg">
-          <div className="bg-white/80 backdrop-blur-sm w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <BookOpen className="w-10 h-10 text-emerald-600" />
+      <div className="text-center py-4">
+        <div className="bg-gradient-to-br from-emerald-100 to-teal-100 p-6 rounded-2xl mb-4 border-2 border-emerald-300 shadow-lg">
+          <div className="bg-white/80 backdrop-blur-sm w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+            <BookOpen className="w-7 h-7 text-emerald-600" />
           </div>
-          <h3 className="text-2xl font-bold text-emerald-900 mb-3">{t('quizOnLearnedWords')}</h3>
-          <p className="text-emerald-700 text-lg mb-2">{t('testYourKnowledge5Questions')}</p>
-          <p className="text-emerald-600 text-sm">🎯 Test yourself and track your progress!</p>
+          <h3 className="text-xl font-bold text-emerald-900 mb-2">{t('quizOnLearnedWords')}</h3>
+          <p className="text-emerald-700 text-sm mb-1">{t('testYourKnowledge5Questions')}</p>
+          <p className="text-emerald-600 text-xs">🎯 Test yourself and track your progress!</p>
         </div>
-        <div className="flex gap-3 justify-center">
-          <Button onClick={startQuiz} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-10 py-7 text-xl rounded-2xl shadow-xl font-bold transform hover:scale-105 transition-all">
+        <div className="flex gap-2 justify-center">
+          <Button onClick={startQuiz} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-4 text-base rounded-xl shadow-lg font-bold transform hover:scale-105 transition-all">
             🚀 {t('startQuiz')}
           </Button>
-          <Button onClick={startQuiz} variant="outline" className="px-7 py-7 text-lg rounded-2xl border-2 border-emerald-300 hover:bg-emerald-50">
-            <RefreshCw className="w-6 h-6 text-emerald-600" />
+          <Button onClick={startQuiz} variant="outline" className="px-4 py-4 text-base rounded-xl border-2 border-emerald-300 hover:bg-emerald-50">
+            <RefreshCw className="w-5 h-5 text-emerald-600" />
           </Button>
         </div>
       </div>
@@ -181,32 +181,32 @@ export const DailyQuizTab = () => {
   if (isComplete) {
     const percentage = Math.round((score / quizWords.length) * 100);
     return (
-      <div className="text-center py-8">
-        <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 p-10 rounded-3xl mb-6 border-2 border-yellow-200 shadow-xl">
-          <div className="animate-bounce mb-4">
-            <Trophy className="w-24 h-24 text-yellow-500 mx-auto drop-shadow-2xl" />
+      <div className="text-center py-4">
+        <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 p-6 rounded-2xl mb-4 border-2 border-yellow-200 shadow-lg">
+          <div className="mb-3">
+            <Trophy className="w-16 h-16 text-yellow-500 mx-auto drop-shadow-lg" />
           </div>
-          <h3 className="text-3xl font-bold text-slate-900 mb-4">🎉 {t('quizComplete')} 🎉</h3>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 mb-4 inline-block shadow-lg">
-            <p className="text-6xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
+          <h3 className="text-2xl font-bold text-slate-900 mb-3">🎉 {t('quizComplete')} 🎉</h3>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-3 inline-block shadow-md">
+            <p className="text-4xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-1">
               {score}/{quizWords.length}
             </p>
-            <p className="text-lg text-slate-600 font-semibold">{percentage}% correct</p>
+            <p className="text-sm text-slate-600 font-semibold">{percentage}% correct</p>
           </div>
           {percentage >= 80 ? (
-            <p className="text-2xl font-bold text-green-600 mb-4">{t('excellentMasteredWords')}</p>
+            <p className="text-lg font-bold text-green-600 mb-2">{t('excellentMasteredWords')}</p>
           ) : percentage >= 60 ? (
-            <p className="text-2xl font-bold text-blue-600 mb-4">{t('nicePracticeWords')}</p>
+            <p className="text-lg font-bold text-blue-600 mb-2">{t('nicePracticeWords')}</p>
           ) : (
-            <p className="text-2xl font-bold text-orange-600 mb-4">{t('keepLearningImproving')}</p>
+            <p className="text-lg font-bold text-orange-600 mb-2">{t('keepLearningImproving')}</p>
           )}
         </div>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Button onClick={handleRestart} className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-6 text-lg rounded-2xl shadow-lg font-bold">
+        <div className="flex gap-2 justify-center flex-wrap">
+          <Button onClick={handleRestart} className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-5 py-3 text-sm rounded-xl shadow-lg font-bold">
             🔄 {t('playAgain')}
           </Button>
-          <Button onClick={() => { handleRestart(); setTimeout(startQuiz, 100); }} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-6 text-lg rounded-2xl shadow-lg font-bold">
-            <RefreshCw className="w-5 h-5 mr-2" />
+          <Button onClick={() => { handleRestart(); setTimeout(startQuiz, 100); }} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-3 text-sm rounded-xl shadow-lg font-bold">
+            <RefreshCw className="w-4 h-4 mr-1" />
             ✨ {t('tryAgain')}
           </Button>
         </div>
@@ -227,48 +227,48 @@ export const DailyQuizTab = () => {
   const currentQ = quizWords[currentQuestion];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-bold text-emerald-700">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-bold text-emerald-700">
           📝 {t('question')} {currentQuestion + 1} {t('of')} {quizWords.length}
         </span>
-        <span className="text-sm font-bold text-teal-600">
+        <span className="text-xs font-bold text-teal-600">
           ⭐ {t('yourScore')}: {score}
         </span>
       </div>
       
-      <div className="w-full bg-slate-200 rounded-full h-4 mb-6 shadow-inner">
+      <div className="w-full bg-slate-200 rounded-full h-2 mb-4 shadow-inner">
         <div 
-          className="bg-gradient-to-r from-emerald-500 to-teal-500 h-4 rounded-full transition-all duration-500 shadow-lg"
+          className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500 shadow-md"
           style={{ width: `${((currentQuestion + 1) / quizWords.length) * 100}%` }}
         ></div>
       </div>
 
-      <div className="bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white p-10 rounded-3xl text-center shadow-2xl border-2 border-blue-400">
-        <div className="bg-white/20 backdrop-blur-sm inline-block px-6 py-2 rounded-xl mb-4">
-          <p className="text-sm font-semibold">💭 {t('whatDoesThisMean')}?</p>
+      <div className="bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white p-6 rounded-2xl text-center shadow-lg border-2 border-blue-400">
+        <div className="bg-white/20 backdrop-blur-sm inline-block px-4 py-1 rounded-lg mb-2">
+          <p className="text-xs font-semibold">💭 {t('whatDoesThisMean')}?</p>
         </div>
-        <h2 className="text-5xl font-black mb-3 drop-shadow-lg">{currentQ.word}</h2>
-        <p className="text-lg opacity-90 italic">"{currentQ.pronunciation}"</p>
+        <h2 className="text-3xl font-black mb-2 drop-shadow-lg">{currentQ.word}</h2>
+        <p className="text-sm opacity-90 italic">"{currentQ.pronunciation}"</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-2">
         {currentQ.options.map((option, index) => {
           const isCorrect = option === currentQ.correctAnswer;
           const isSelected = option === selectedAnswer;
           
-          let buttonClass = "w-full p-6 text-left rounded-2xl border-2 transition-all transform font-bold text-lg ";
+          let buttonClass = "w-full p-4 text-left rounded-xl border-2 transition-all transform font-bold text-sm ";
           
           if (showResult) {
             if (isCorrect) {
-              buttonClass += "bg-gradient-to-r from-green-400 to-emerald-500 border-green-600 text-white shadow-xl scale-105";
+              buttonClass += "bg-gradient-to-r from-green-400 to-emerald-500 border-green-600 text-white shadow-lg scale-105";
             } else if (isSelected && !isCorrect) {
-              buttonClass += "bg-gradient-to-r from-red-400 to-pink-500 border-red-600 text-white shadow-xl";
+              buttonClass += "bg-gradient-to-r from-red-400 to-pink-500 border-red-600 text-white shadow-lg";
             } else {
               buttonClass += "bg-slate-100 border-slate-200 text-slate-400";
             }
           } else {
-            buttonClass += "bg-white hover:bg-gradient-to-r hover:from-blue-100 hover:to-indigo-100 text-slate-800 border-slate-200 hover:border-blue-400 shadow-md hover:shadow-xl hover:scale-102";
+            buttonClass += "bg-white hover:bg-gradient-to-r hover:from-blue-100 hover:to-indigo-100 text-slate-800 border-slate-200 hover:border-blue-400 shadow-sm hover:shadow-md hover:scale-102";
           }
           
           return (
@@ -280,11 +280,11 @@ export const DailyQuizTab = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <span className="text-2xl font-black mr-3 opacity-70">{String.fromCharCode(65 + index)}.</span>
+                  <span className="text-lg font-black mr-2 opacity-70">{String.fromCharCode(65 + index)}.</span>
                   <span>{option}</span>
                 </div>
-                {showResult && isCorrect && <CheckCircle2 className="w-6 h-6 text-white" />}
-                {showResult && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-white" />}
+                {showResult && isCorrect && <CheckCircle2 className="w-5 h-5 text-white" />}
+                {showResult && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-white" />}
               </div>
             </button>
           );
@@ -292,7 +292,7 @@ export const DailyQuizTab = () => {
       </div>
 
       {showResult && (
-        <Button onClick={handleNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-7 text-xl rounded-2xl shadow-2xl font-black transform hover:scale-105 transition-all">
+        <Button onClick={handleNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-4 text-base rounded-xl shadow-lg font-black transform hover:scale-105 transition-all">
           {currentQuestion + 1 < quizWords.length ? (
             <>
               {t('next')} ➡️
@@ -302,6 +302,6 @@ export const DailyQuizTab = () => {
           )}
         </Button>
       )}
-    </div>
+    </</div>
   );
 };
