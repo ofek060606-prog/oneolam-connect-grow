@@ -28,25 +28,26 @@ export const ProfileCard = ({ user, onVote, onSuperSwipe, isProcessing }) => {
 
     return (
         <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0, rotateY: -10 }}
+            animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+            exit={{ scale: 0.9, opacity: 0, rotateY: 10 }}
+            transition={{ type: 'spring', damping: 20 }}
             className="relative w-full max-w-sm mx-auto"
         >
             {/* Main Card */}
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div className="bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 rounded-3xl shadow-2xl overflow-hidden border-2 border-purple-100">
                 {/* Photo Section with Gallery */}
-                <div className="relative h-[500px] bg-gradient-to-br from-purple-100 to-pink-100">
+                <div className="relative h-[500px] bg-gradient-to-br from-purple-200 to-pink-200 overflow-hidden">
                     <AnimatePresence mode="wait">
                         <motion.img
                             key={currentPhotoIndex}
                             src={photos[currentPhotoIndex]}
                             alt={user.full_name}
                             className="w-full h-full object-cover"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{ opacity: 0, scale: 1.1, x: 20 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, x: -20 }}
+                            transition={{ duration: 0.4, ease: 'easeInOut' }}
                         />
                     </AnimatePresence>
 
@@ -96,7 +97,36 @@ export const ProfileCard = ({ user, onVote, onSuperSwipe, isProcessing }) => {
                     )}
 
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    
+                    {/* Sparkle Effect */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        <motion.div
+                            animate={{
+                                opacity: [0, 0.3, 0],
+                                scale: [0.8, 1, 0.8],
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: 'easeInOut'
+                            }}
+                            className="absolute top-10 right-10 w-3 h-3 bg-white rounded-full blur-sm"
+                        />
+                        <motion.div
+                            animate={{
+                                opacity: [0, 0.4, 0],
+                                scale: [0.8, 1, 0.8],
+                            }}
+                            transition={{
+                                duration: 2.5,
+                                repeat: Infinity,
+                                delay: 1,
+                                ease: 'easeInOut'
+                            }}
+                            className="absolute top-32 right-24 w-2 h-2 bg-pink-200 rounded-full blur-sm"
+                        />
+                    </div>
 
                     {/* Info Button */}
                     <button
@@ -107,23 +137,28 @@ export const ProfileCard = ({ user, onVote, onSuperSwipe, isProcessing }) => {
                     </button>
 
                     {/* Name & Age - Bottom Left */}
-                    <div className="absolute bottom-6 left-6 text-white">
-                        <h2 className="text-4xl font-bold mb-1 drop-shadow-lg">
+                    <motion.div 
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="absolute bottom-6 left-6 text-white"
+                    >
+                        <h2 className="text-4xl font-black mb-2 drop-shadow-2xl tracking-tight">
                             {user.full_name}
                         </h2>
-                        <div className="flex items-center space-x-3 text-lg">
-                            <span className="font-semibold">{user.age} years old</span>
+                        <div className="flex items-center space-x-3 text-lg backdrop-blur-sm bg-black/20 rounded-full px-4 py-2 inline-flex">
+                            <span className="font-bold">{user.age} years old</span>
                             {user.location && (
                                 <>
-                                    <span className="text-white/60">•</span>
+                                    <span className="text-white/80">•</span>
                                     <div className="flex items-center space-x-1">
                                         <MapPin className="w-4 h-4" />
-                                        <span>{user.location}</span>
+                                        <span className="font-medium">{user.location}</span>
                                     </div>
                                 </>
                             )}
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Info Section - Expandable */}
