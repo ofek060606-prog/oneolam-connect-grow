@@ -23,8 +23,8 @@ const CategoryCard = ({ category, icon: Icon, onClick, isLocked = false }) => (
 );
 
 const TriviaQuestionCard = ({ question, onAnswer, hasAnswered, userAnswer, questionNum, totalQuestions }) => {
-  if (!question || !question.options) {
-    return <div className="text-center text-slate-500">Loading question...</div>;
+  if (!question || !question.options || !Array.isArray(question.options) || question.options.length === 0) {
+    return <div className="text-center text-slate-500">Invalid question data...</div>;
   }
 
   const correctAnswer = question.correctAnswer;
@@ -145,9 +145,9 @@ export default function TriviaPage() {
       const transformedQuestions = questionsForGame.map(q => ({
         ...q,
         question: q[`question_${currentLanguage}`] || q.question_en,
-        options: q[`options_${currentLanguage}`] || q.options_en,
+        options: q[`options_${currentLanguage}`] || q.options_en || [],
         correctAnswer: q[`correct_answer_${currentLanguage}`] || q.correct_answer_en
-      }));
+      })).filter(q => q.options && q.options.length > 0 && q.question && q.correctAnswer);
 
       setQuestions(transformedQuestions);
       setShowCategories(false);
