@@ -22,6 +22,19 @@ export default function Feed({ onChatClick }) {
     loadNotifications();
   }, []);
 
+  useEffect(() => {
+    // Listen for story creation event to reload stories
+    const handleStoryCreated = () => {
+      loadFeedData();
+    };
+    
+    window.addEventListener('storyCreated', handleStoryCreated);
+    
+    return () => {
+      window.removeEventListener('storyCreated', handleStoryCreated);
+    };
+  }, []);
+
   const loadFeedData = async () => {
     setIsLoading(true);
     try {

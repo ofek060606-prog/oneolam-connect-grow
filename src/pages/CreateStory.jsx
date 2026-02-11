@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { User, Story } from '@/entities/all';
 import { UploadFile } from '@/integrations/Core';
@@ -80,6 +79,10 @@ export default function CreateStoryPage({ onBack }) {
 
       await Story.create(storyData);
       toast.success(t('createStory_success'));
+      
+      // Notify Feed to reload stories
+      window.dispatchEvent(new Event('storyCreated'));
+      
       onBack();
 
     } catch (error) {
