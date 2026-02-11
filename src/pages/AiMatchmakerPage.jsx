@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ArrowLeft, Filter, Heart, X, Zap, Sparkles, Clock, Info, Star, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -476,10 +475,13 @@ export default function AiMatchmakerPage({ onBack, onChatClick }) {
 
             await updateSwipeCount(false);
 
-            if (currentIndex < profiles.length - 1) {
-                setCurrentIndex(prev => prev + 1);
-            } else {
-                setHasReachedLimit(true);
+            // Always move to next profile if not showing match
+            if (!showMatch) {
+                if (currentIndex < profiles.length - 1) {
+                    setCurrentIndex(prev => prev + 1);
+                } else {
+                    setHasReachedLimit(true);
+                }
             }
 
         } catch (error) {
@@ -914,12 +916,21 @@ export default function AiMatchmakerPage({ onBack, onChatClick }) {
             {/* Match Modal */}
             {showMatch && matchedUser && (
                 <MatchModal
+                    currentUser={currentUser}
                     matchedUser={matchedUser}
-                    onClose={() => setShowMatch(false)}
-                    onSendMessage={() => {
+                    onClose={() => {
+                        setShowMatch(false);
+                        // Move to next profile after closing match modal
+                        if (currentIndex < profiles.length - 1) {
+                            setCurrentIndex(prev => prev + 1);
+                        } else {
+                            setHasReachedLimit(true);
+                        }
+                    }}
+                    onSendMessage={(email, name) => {
                         setShowMatch(false);
                         if (onChatClick) {
-                            onChatClick(matchedUser.email, matchedUser.full_name);
+                            onChatClick(email, name);
                         }
                     }}
                 />
