@@ -429,7 +429,9 @@ export default function AiMatchmakerPage({ onBack, onChatClick }) {
                     });
                 });
 
-                if (existingLike && existingLike.length > 0) {
+                const hasMatch = existingLike && existingLike.length > 0;
+
+                if (hasMatch) {
                     setMatchedUser(profile);
                     setShowMatch(true);
 
@@ -475,8 +477,8 @@ export default function AiMatchmakerPage({ onBack, onChatClick }) {
 
             await updateSwipeCount(false);
 
-            // Always move to next profile if not showing match
-            if (!showMatch) {
+            // Only advance to next profile if not a match (match advances when modal closes)
+            if (!hasMatch) {
                 if (currentIndex < profiles.length - 1) {
                     setCurrentIndex(prev => prev + 1);
                 } else {
