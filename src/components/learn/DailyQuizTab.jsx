@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HebrewWord, LearningProgress, User } from '@/entities/all';
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, Trophy, BookOpen, ArrowRight } from 'lucide-react';
+import { CheckCircle2, XCircle, Trophy, BookOpen, ArrowRight, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { toast } from 'sonner';
 
@@ -91,13 +91,37 @@ export const DailyQuizTab = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestion + 1 < quizWords.length) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setShowResult(false);
     } else {
       setIsComplete(true);
+      await updateLearningProgress();
+    }
+  };
+
+  const updateLearningProgress = async () => {
+    try {
+      const user = await User.me();
+      const progress = await LearningProgress.filter({ user_email: user.email });
+      
+      if (progress && progress.length > 0) {
+        const currentProgress = progress[0];
+        await LearningProgress.update(currentProgress.id, {
+          total_words_learned: (currentProgress.total_words_learned || 0) + score,
+          streak_count: (currentProgress.streak_count || 0) + 1
+        });
+      } else {
+        await LearningProgress.create({
+          user_email: user.email,
+          total_words_learned: score,
+          streak_count: 1
+        });
+      }
+    } catch (error) {
+      console.error('Error updating progress:', error);
     }
   };
 
@@ -127,9 +151,14 @@ export const DailyQuizTab = () => {
           <h3 className="text-xl font-bold text-slate-900 mb-2">{t('quizOnLearnedWords')}</h3>
           <p className="text-slate-600 mb-4">{t('testYourKnowledge5Questions')}</p>
         </div>
-        <Button onClick={startQuiz} className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-6 text-lg rounded-xl">
-          {t('startQuiz')}
-        </Button>
+        <div className="flex gap-3 justify-center">
+          <Button onClick={startQuiz} className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-6 text-lg rounded-xl">
+            {t('startQuiz')}
+          </Button>
+          <Button onClick={startQuiz} variant="outline" className="px-6 py-6 text-lg rounded-xl">
+            <RefreshCw className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
     );
   }
@@ -149,9 +178,15 @@ export const DailyQuizTab = () => {
         ) : (
           <p className="text-orange-600 font-medium mb-6">{t('keepLearningImproving')}</p>
         )}
-        <Button onClick={handleRestart} className="bg-blue-500 hover:bg-blue-600">
-          {t('playAgain')}
-        </Button>
+        <div className="flex gap-3 justify-center">
+          <Button onClick={handleRestart} className="bg-blue-500 hover:bg-blue-600">
+            {t('playAgain')}
+          </Button>
+          <Button onClick={() => { handleRestart(); setTimeout(startQuiz, 100); }} variant="outline">
+            <RefreshCw className="w-5 h-5 mr-2" />
+            {t('tryAgain')}
+          </Button>
+        </div>
       </div>
     );
   }
