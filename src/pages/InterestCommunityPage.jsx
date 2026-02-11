@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { CommunityMessage, DailyMessageCount, User, Post } from '@/entities/all';
 import { ArrowLeft, Send, Users, Crown, Lock, Plus, MessageCircle, Camera } from 'lucide-react';
@@ -28,12 +27,6 @@ export default function InterestCommunityPage({ interestName, interestColor, onB
   useEffect(() => {
     loadData();
   }, [interestName]);
-
-  useEffect(() => {
-    if (activeTab === 'chat') {
-      scrollToBottom();
-    }
-  }, [messages, activeTab]);
 
   const loadData = async () => {
     setIsLoading(true);
