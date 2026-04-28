@@ -401,6 +401,7 @@ export default function AiMatchmakerPage({ onBack, onChatClick }) {
 
         setIsProcessing(true);
         const liked = direction === 'right';
+        let hasMatch = false;
 
         try {
             await delay(300);
