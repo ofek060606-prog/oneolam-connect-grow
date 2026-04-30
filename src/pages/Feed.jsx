@@ -43,7 +43,11 @@ export default function Feed({ onChatClick }) {
       const realPosts = postsData.filter(p => p.created_by && p.created_by.includes('@'));
       
       const storiesData = await Story.list('-created_date', 20);
-      const realStories = storiesData.filter(s => s.created_by && s.created_by.includes('@'));
+      const now = new Date();
+      const realStories = storiesData.filter(s => 
+        s.created_by && s.created_by.includes('@') &&
+        (!s.expires_at || new Date(s.expires_at) > now)
+      );
 
       setPosts(realPosts);
       setStories(realStories);
