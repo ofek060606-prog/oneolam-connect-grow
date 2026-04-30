@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Question, User } from '@/entities/all';
 import { Plus, Search, TrendingUp, Clock, Award, MessageCircle, ArrowUp, Trash2 } from 'lucide-react';
@@ -15,6 +14,15 @@ export const QnA = () => {
   const [showAskForm, setShowAskForm] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const { t } = useTranslation();
+
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return '';
+    const diffMs = Date.now() - new Date(dateString).getTime();
+    const diffMinutes = Math.floor(diffMs / 60000);
+    if (diffMinutes < 1) return 'just now';
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
+    return `${Math.floor(diffMinutes / 60)}h ago`;
+  };
 
   const categories = [
     { id: 'all', label: t('allTopics') },
@@ -118,7 +126,7 @@ export const QnA = () => {
               {question.category}
             </span>
             <span className="text-slate-500">by {question.author_name}</span>
-            <span className="text-slate-500">2h ago</span>
+            <span className="text-slate-500">{formatTimeAgo(question.creation_time || question.created_date)}</span>
           </div>
         </div>
         {currentUser?.role === 'admin' && (

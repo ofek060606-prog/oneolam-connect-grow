@@ -27,6 +27,7 @@ export const AskQuestionForm = ({ onSubmit, onCancel }) => {
         author_name: user.full_name,
         upvotes: 0,
         answers_count: 0,
+        creation_time: new Date().toISOString(),
       };
       await onSubmit(questionData);
     } catch (error) {

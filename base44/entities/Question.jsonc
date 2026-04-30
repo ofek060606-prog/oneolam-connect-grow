@@ -1,0 +1,66 @@
+{
+  "name": "Question",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Question title"
+    },
+    "content": {
+      "type": "string",
+      "description": "Question details"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "career",
+        "technology",
+        "lifestyle",
+        "business",
+        "creative"
+      ],
+      "default": "general",
+      "description": "Question category"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Question author name"
+    },
+    "answers_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of answers"
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0,
+      "description": "Question upvotes"
+    },
+    "creation_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Exact time the question was created"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "author_name"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
