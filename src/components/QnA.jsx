@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Question, User } from '@/entities/all';
 import { Plus, Search, TrendingUp, Clock, Award, MessageCircle, ArrowUp, Trash2 } from 'lucide-react';
-import { formatDistanceToNowStrict } from 'date-fns';
+
 import { AskQuestionForm } from './qna/AskQuestionForm';
 import { useTranslation } from './utils/i18n';
 import { toast } from 'sonner';
@@ -15,6 +15,15 @@ export const QnA = () => {
   const [showAskForm, setShowAskForm] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const { t } = useTranslation();
+
+  const formatTime = (dateString) => {
+    if (!dateString) return '';
+    const diffMs = Date.now() - new Date(dateString).getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return 'just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    return `${Math.floor(diffMin / 60)}h ago`;
+  };
 
   const categories = [
     { id: 'all', label: t('allTopics') },
@@ -118,7 +127,7 @@ export const QnA = () => {
               {question.category}
             </span>
             <span className="text-slate-500">by {question.author_name}</span>
-            <span className="text-slate-500">{question.created_date ? formatDistanceToNowStrict(new Date(question.created_date), { addSuffix: true }) : ''}</span>
+            <span className="text-slate-500">{formatTime(question.created_date)}</span>
           </div>
         </div>
         {currentUser?.role === 'admin' && (
