@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Post, Story, Notification, User } from '@/entities/all';
-import { StoryCircle } from '../components/shared/StoryCircle';
+import { Post, Notification, User } from '@/entities/all';
+
 import { PostCard } from '../components/shared/PostCard';
 import { OneOlamIcon } from '../components/icons/OneOlamIcon';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { useTranslation } from '../components/utils/i18n';
 import { Bell, Search, MessageSquare } from 'lucide-react';
 import { CreatePost } from '../components/feed/CreatePost';
-import { StoryViewer } from '../components/shared/StoryViewer';
+
 
 export default function Feed({ onChatClick }) {
   const [posts, setPosts] = useState([]);
-  const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewingStory, setViewingStory] = useState(null);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const { t } = useTranslation();
 
@@ -22,18 +20,7 @@ export default function Feed({ onChatClick }) {
     loadNotifications();
   }, []);
 
-  useEffect(() => {
-    // Listen for story creation event to reload stories
-    const handleStoryCreated = () => {
-      loadFeedData();
-    };
-    
-    window.addEventListener('storyCreated', handleStoryCreated);
-    
-    return () => {
-      window.removeEventListener('storyCreated', handleStoryCreated);
-    };
-  }, []);
+
 
   const loadFeedData = async () => {
     setIsLoading(true);
@@ -42,15 +29,7 @@ export default function Feed({ onChatClick }) {
       const postsData = await Post.list('-created_date', 50);
       const realPosts = postsData.filter(p => p.created_by && p.created_by.includes('@'));
       
-      const storiesData = await Story.list('-created_date', 20);
-      const now = new Date();
-      const realStories = storiesData.filter(s => 
-        s.created_by && s.created_by.includes('@') &&
-        (!s.expires_at || new Date(s.expires_at) > now)
-      );
-
       setPosts(realPosts);
-      setStories(realStories);
     } catch (error) {
       console.error('Error loading feed:', error);
     } finally {
@@ -82,13 +61,7 @@ export default function Feed({ onChatClick }) {
     window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'notifications' } }));
   }
 
-  const handleStoryClick = (story) => {
-    setViewingStory(story);
-  };
 
-  const handleCreateStory = () => {
-    window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'create-story' } }));
-  };
 
   if (isLoading) {
     return (
@@ -134,16 +107,6 @@ export default function Feed({ onChatClick }) {
 
         {/* Main content area */}
         <div className="px-4 pt-4">
-          {/* Stories */}
-          <div className="mb-6">
-            <div className="flex space-x-4 overflow-x-auto pb-3">
-              <StoryCircle isCreate={true} onClick={handleCreateStory} />
-              {stories.map(story => (
-                <StoryCircle key={story.id} story={story} onClick={() => handleStoryClick(story)} />
-              ))}
-            </div>
-          </div>
-          
           {/* Create Post */}
           <CreatePost onPostCreated={loadFeedData} />
 
@@ -168,13 +131,7 @@ export default function Feed({ onChatClick }) {
         </div>
       </div>
 
-      {/* Story Viewer */}
-      {viewingStory && (
-        <StoryViewer 
-          story={viewingStory} 
-          onClose={() => setViewingStory(null)} 
-        />
-      )}
+
     </>
   );
 }
