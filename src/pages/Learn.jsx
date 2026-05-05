@@ -29,19 +29,19 @@ export default function LearnPage() {
         {/* Daily Hebrew Words */}
         <div 
           onClick={handleNavigateToDailyWords}
-          className="bg-gradient-to-r from-indigo-400 to-purple-500 p-4 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
+          className="bg-gradient-to-r from-indigo-400 to-purple-500 p-7 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-white/20 p-2 rounded-xl">
-                <BookOpen className="w-6 h-6" />
+              <div className="bg-white/20 p-3 rounded-xl">
+                <BookOpen className="w-9 h-9" />
               </div>
               <div>
-                <h2 className="text-lg font-bold">{t('dailyHebrewWords')}</h2>
-                <p className="text-indigo-100 text-sm">{t('learnNewWords')}</p>
+                <h2 className="text-2xl font-bold">{t('dailyHebrewWords')}</h2>
+                <p className="text-indigo-100">{t('learnNewWords')}</p>
               </div>
             </div>
-            <Sparkles className="w-7 h-7 text-yellow-200" />
+            <Sparkles className="w-12 h-12 text-yellow-200" />
           </div>
         </div>
 
