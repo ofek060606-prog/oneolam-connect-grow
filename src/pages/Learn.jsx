@@ -25,42 +25,42 @@ export default function LearnPage() {
         <p className="text-blue-100">{t('learnSomethingNew')}</p>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 space-y-3">
         {/* Daily Hebrew Words */}
         <div 
           onClick={handleNavigateToDailyWords}
-          className="bg-gradient-to-r from-indigo-400 to-purple-500 p-6 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
+          className="bg-gradient-to-r from-indigo-400 to-purple-500 p-4 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-white/20 p-3 rounded-xl">
-                <BookOpen className="w-8 h-8" />
+              <div className="bg-white/20 p-2 rounded-xl">
+                <BookOpen className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">{t('dailyHebrewWords')}</h2>
-                <p className="text-indigo-100">{t('learnNewWords')}</p>
+                <h2 className="text-lg font-bold">{t('dailyHebrewWords')}</h2>
+                <p className="text-indigo-100 text-sm">{t('learnNewWords')}</p>
               </div>
             </div>
-            <Sparkles className="w-10 h-10 text-yellow-200" />
+            <Sparkles className="w-7 h-7 text-yellow-200" />
           </div>
         </div>
 
         {/* Jewish Trivia */}
         <div 
           onClick={handleNavigateToTrivia}
-          className="bg-gradient-to-r from-purple-400 to-pink-500 p-6 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
+          className="bg-gradient-to-r from-purple-400 to-pink-500 p-4 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-white"
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-white/20 p-3 rounded-xl">
-                <Lightbulb className="w-8 h-8" />
+              <div className="bg-white/20 p-2 rounded-xl">
+                <Lightbulb className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">{t('jewishTrivia')}</h2>
-                <p className="text-purple-100">{t('testKnowledge')}</p>
+                <h2 className="text-lg font-bold">{t('jewishTrivia')}</h2>
+                <p className="text-purple-100 text-sm">{t('testKnowledge')}</p>
               </div>
             </div>
-            <Trophy className="w-10 h-10 text-yellow-200" />
+            <Trophy className="w-7 h-7 text-yellow-200" />
           </div>
         </div>
 
