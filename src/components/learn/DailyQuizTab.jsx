@@ -157,23 +157,19 @@ export const DailyQuizTab = () => {
 
   if (!quizStarted) {
     return (
-      <div className="text-center py-4">
-        <div className="bg-gradient-to-br from-emerald-100 to-teal-100 p-6 rounded-2xl mb-4 border-2 border-emerald-300 shadow-lg">
-          <div className="bg-white/80 backdrop-blur-sm w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-            <BookOpen className="w-7 h-7 text-emerald-600" />
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="bg-emerald-100 p-2 rounded-xl shrink-0">
+            <BookOpen className="w-6 h-6 text-emerald-600" />
           </div>
-          <h3 className="text-xl font-bold text-emerald-900 mb-2">{t('quizOnLearnedWords')}</h3>
-          <p className="text-emerald-700 text-sm mb-1">{t('testYourKnowledge5Questions')}</p>
-          <p className="text-emerald-600 text-xs">🎯 Test yourself and track your progress!</p>
+          <div>
+            <h3 className="text-sm font-bold text-emerald-900">{t('quizOnLearnedWords')}</h3>
+            <p className="text-emerald-600 text-xs">{t('testYourKnowledge5Questions')}</p>
+          </div>
         </div>
-        <div className="flex gap-2 justify-center">
-          <Button onClick={startQuiz} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-4 text-base rounded-xl shadow-lg font-bold transform hover:scale-105 transition-all">
-            🚀 {t('startQuiz')}
-          </Button>
-          <Button onClick={startQuiz} variant="outline" className="px-4 py-4 text-base rounded-xl border-2 border-emerald-300 hover:bg-emerald-50">
-            <RefreshCw className="w-5 h-5 text-emerald-600" />
-          </Button>
-        </div>
+        <Button onClick={startQuiz} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 text-sm rounded-xl shadow font-bold shrink-0">
+          🚀 {t('startQuiz')}
+        </Button>
       </div>
     );
   }
