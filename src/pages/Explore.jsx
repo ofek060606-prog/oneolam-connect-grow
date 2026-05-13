@@ -127,11 +127,10 @@ export default function Explore({ onChatClick, onSearch }) {
             type="text"
             placeholder={t('searchCommunities')}
             value={searchQuery}
-            onChange={(e) => {
-              const val = e.target.value;
-              setSearchQuery(val);
-              if (val.trim().length >= 2) {
-                window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'search-results', query: val.trim() } }));
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && searchQuery.trim().length >= 1) {
+                window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'search-results', query: searchQuery.trim() } }));
               }
             }}
             className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
