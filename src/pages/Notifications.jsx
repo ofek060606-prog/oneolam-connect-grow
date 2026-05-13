@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Notification, User } from '@/entities/all';
 import { ArrowLeft, Heart, MessageCircle, UserPlus, Flag } from 'lucide-react';
@@ -64,6 +63,10 @@ export default function NotificationsPage({ onBack }) {
         return `${senderName} ${t('commentedOnYourPost')}`;
       case 'follow':
         return `${senderName} ${t('startedFollowingYou')}`;
+      case 'match':
+        return `${senderName} matched with you! 🎉`;
+      case 'matchmaker_like':
+        return `${senderName} liked you in AI Matchmaker! ❤️`;
       case 'report_post':
       case 'report_user':
         return notification.content;
@@ -72,24 +75,56 @@ export default function NotificationsPage({ onBack }) {
     }
   };
 
-  const NotificationIcon = ({ type }) => {
-    const icons = {
-      like: <Heart className="w-5 h-5 text-white" />,
-      comment: <MessageCircle className="w-5 h-5 text-white" />,
-      follow: <UserPlus className="w-5 h-5 text-white" />,
-      report_post: <Flag className="w-5 h-5 text-white" />,
-      report_user: <Flag className="w-5 h-5 text-white" />,
-    };
-    const colors = {
+  const NotificationAvatar = ({ notification }) => {
+    const { type, sender_name } = notification;
+    const avatar = notification.sender_avatar;
+
+    const typeColors = {
       like: 'bg-red-500',
       comment: 'bg-blue-500',
       follow: 'bg-green-500',
+      match: 'bg-pink-500',
+      matchmaker_like: 'bg-purple-500',
       report_post: 'bg-orange-500',
       report_user: 'bg-orange-500',
     };
+
+    const typeIcons = {
+      like: <Heart className="w-4 h-4 text-white" />,
+      comment: <MessageCircle className="w-4 h-4 text-white" />,
+      follow: <UserPlus className="w-4 h-4 text-white" />,
+      match: <Heart className="w-4 h-4 text-white fill-white" />,
+      matchmaker_like: <Heart className="w-4 h-4 text-white" />,
+      report_post: <Flag className="w-4 h-4 text-white" />,
+      report_user: <Flag className="w-4 h-4 text-white" />,
+    };
+
+    if (avatar) {
+      return (
+        <div className="relative shrink-0">
+          <img
+            src={avatar}
+            alt={sender_name}
+            className="w-12 h-12 rounded-full object-cover"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+          <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center ${typeColors[type] || 'bg-slate-500'}`}>
+            {typeIcons[type] || null}
+          </div>
+        </div>
+      );
+    }
+
+    // Fallback: colored circle with initials + icon badge
+    const initials = sender_name ? sender_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '?';
     return (
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${colors[type] || 'bg-slate-500'}`}>
-        {icons[type] || null}
+      <div className="relative shrink-0">
+        <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold text-sm">
+          {initials}
+        </div>
+        <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center ${typeColors[type] || 'bg-slate-500'}`}>
+          {typeIcons[type] || null}
+        </div>
       </div>
     );
   };
@@ -117,7 +152,7 @@ export default function NotificationsPage({ onBack }) {
               onClick={() => handleNotificationClick(note)}
               className="w-full bg-white p-4 rounded-xl shadow-sm flex items-center space-x-4 text-left hover:bg-slate-50 transition-colors"
             >
-              <NotificationIcon type={note.type} />
+              <NotificationAvatar notification={note} />
               <div>
                 <p className="text-slate-800">{getNotificationText(note)}</p>
                 <p className="text-xs text-slate-500 mt-1">
