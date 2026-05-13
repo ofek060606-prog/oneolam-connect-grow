@@ -23,6 +23,7 @@ import CreateCommunityPage from './CreateCommunity';
 import InterestCommunityPage from './InterestCommunityPage';
 import HashtagPostsPage from './HashtagPostsPage';
 import DailyWordsQuizPage from './DailyWordsQuizPage'; // Import the new page
+import SearchResultsPage from './SearchResults';
 import { EditProfileForm } from '../components/profile/EditProfileForm';
 import { User, Post, Story } from '@/entities/all';
 import { LanguageProvider } from '../components/utils/i18n';
@@ -75,6 +76,7 @@ function AppRouter() {
   const [showInterestCommunity, setShowInterestCommunity] = useState(null);
   const [showHashtagPosts, setShowHashtagPosts] = useState(null);
   const [showDailyWordsQuiz, setShowDailyWordsQuiz] = useState(false); // Add new state for the quiz page
+  const [showSearchResults, setShowSearchResults] = useState(null); // query string or null
 
   // Cleanup script disabled to prevent blocking
   useEffect(() => {
@@ -104,6 +106,7 @@ function AppRouter() {
     setShowInterestCommunity(null);
     setShowHashtagPosts(null);
     setShowDailyWordsQuiz(false); // Add to closeAllModals
+    setShowSearchResults(null);
   }, []);
 
   // Handle browser back button
@@ -114,7 +117,7 @@ function AppRouter() {
           showPostDetail || showAiMatchmaker || showConnections || showSavedPosts || 
           showPayment || showUserProfile || showAdminDashboard || showCommunityPage || 
           showCreateCommunity || showInterestCommunity || showHashtagPosts || 
-          showDailyWordsQuiz || showOnboarding) {
+          showDailyWordsQuiz || showSearchResults || showOnboarding) {
         
         // Close all modals and prevent default back navigation
         event.preventDefault();
@@ -138,7 +141,7 @@ function AppRouter() {
   }, [showChat, showCreateStory, showNotifications, showQuestionDetail, showPostDetail, 
       showAiMatchmaker, showConnections, showSavedPosts, showPayment, showUserProfile, 
       showAdminDashboard, showCommunityPage, showCreateCommunity, showInterestCommunity, 
-      showHashtagPosts, showDailyWordsQuiz, showOnboarding, closeAllModals]);
+      showHashtagPosts, showDailyWordsQuiz, showSearchResults, showOnboarding, closeAllModals]);
 
   const handleChatClick = useCallback((recipientEmail, recipientName) => {
     closeAllModals(); // סוגר את כל החלונות האחרים
@@ -294,6 +297,8 @@ function AppRouter() {
         setShowHashtagPosts({ name: hashtagName, color: hashtagColor });
       } else if (page === 'daily-words-quiz') { // Add new navigation condition
         setShowDailyWordsQuiz(true);
+      } else if (page === 'search-results') {
+        setShowSearchResults(event.detail.query || '');
       } else if (page) {
         setActiveTab(page);
       }
@@ -360,7 +365,7 @@ function AppRouter() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className={`transition-transform duration-300 ease-in-out ${showChat || showCreateStory || showNotifications || showQuestionDetail || showPostDetail || showAiMatchmaker || showConnections || showSavedPosts || showPayment || showUserProfile || showAdminDashboard || showCommunityPage || showCreateCommunity || showInterestCommunity || showHashtagPosts || showOnboarding || showDailyWordsQuiz ? 'transform -translate-x-full md:!transform-none' : ''}`}>
+      <div className={`transition-transform duration-300 ease-in-out ${showChat || showCreateStory || showNotifications || showQuestionDetail || showPostDetail || showAiMatchmaker || showConnections || showSavedPosts || showPayment || showUserProfile || showAdminDashboard || showCommunityPage || showCreateCommunity || showInterestCommunity || showHashtagPosts || showOnboarding || showDailyWordsQuiz || showSearchResults ? 'transform -translate-x-full md:!transform-none' : ''}`}>
         <div className="md:max-w-md md:mx-auto md:shadow-lg md:rounded-lg md:overflow-hidden min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
           {renderActiveComponent()}
           <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
@@ -591,6 +596,22 @@ function AppRouter() {
               hashtagName={showHashtagPosts.name}
               hashtagColor={showHashtagPosts.color}
               onBack={handleHashtagPostsClose}
+            />
+          </motion.div>
+        )}
+
+        {showSearchResults !== null && (
+          <motion.div
+            key="search-results"
+            className="absolute top-0 left-0 w-full h-full bg-white z-50 md:max-w-md md:mx-auto"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          >
+            <SearchResultsPage
+              query={showSearchResults}
+              onBack={() => { setShowSearchResults(null); setActiveTab('explore'); }}
             />
           </motion.div>
         )}

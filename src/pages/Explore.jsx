@@ -40,7 +40,7 @@ const CommunityCard = ({ community, onClick }) => {
   )
 };
 
-export default function Explore({ onChatClick }) {
+export default function Explore({ onChatClick, onSearch }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [communities, setCommunities] = useState([]);
@@ -127,7 +127,13 @@ export default function Explore({ onChatClick }) {
             type="text"
             placeholder={t('searchCommunities')}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchQuery(val);
+              if (val.trim().length >= 2) {
+                window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'search-results', query: val.trim() } }));
+              }
+            }}
             className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
           />
         </div>
