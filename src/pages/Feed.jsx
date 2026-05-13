@@ -4,12 +4,12 @@ import { Post, Notification, User } from '@/entities/all';
 import { PostCard } from '../components/shared/PostCard';
 import { OneOlamIcon } from '../components/icons/OneOlamIcon';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { useTranslation } from '../components/utils/i18n';
+import { useTranslation, LanguageProvider } from '../components/utils/i18n';
 import { Bell, Search, MessageSquare } from 'lucide-react';
 import { CreatePost } from '../components/feed/CreatePost';
 
 
-export default function Feed({ onChatClick }) {
+function FeedInner({ onChatClick }) {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
@@ -134,4 +134,12 @@ export default function Feed({ onChatClick }) {
 
     </>);
 
+}
+
+export default function Feed(props) {
+  return (
+    <LanguageProvider>
+      <FeedInner {...props} />
+    </LanguageProvider>
+  );
 }
