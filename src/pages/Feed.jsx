@@ -86,7 +86,7 @@ export default function Feed({ onChatClick }) {
               </h1>
             </div>
             <div className="flex items-center space-x-2">
-              <button className="p-2 hover:bg-blue-100 rounded-full transition-colors">
+              <button className="p-2 hover:bg-blue-100 rounded-full transition-colors hidden">
                 <Search className="w-6 h-6 text-blue-600 hidden" />
               </button>
                <button onClick={handleNavigateToChats} className="p-2 hover:bg-blue-100 rounded-full transition-colors">
