@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Post, Notification } from '@/entities/all';
 import { UploadFile } from '@/integrations/Core';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Image, Video, X, Loader2 } from 'lucide-react';
+import { Image, X, Loader2 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { moderateContent, checkRateLimit } from '../utils/contentModeration';
 
@@ -183,13 +182,10 @@ export const CreatePost = ({ onPostCreated, communityId = null, communityName = 
           <label htmlFor="media-upload" className="cursor-pointer p-2 hover:bg-blue-50 rounded-full text-blue-600">
             <Image className="w-6 h-6" />
           </label>
-          <label htmlFor="media-upload" className="cursor-pointer p-2 hover:bg-blue-50 rounded-full text-green-600">
-            <Video className="w-6 h-6" />
-          </label>
           <input
             id="media-upload"
             type="file"
-            accept="image/*,video/*"
+            accept="image/*"
             onChange={handleFileChange}
             className="hidden"
           />
