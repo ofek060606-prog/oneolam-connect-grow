@@ -56,7 +56,6 @@ import Connections from './pages/Connections';
 import CreateCommunity from './pages/CreateCommunity';
 import CreateStory from './pages/CreateStory';
 import DailyWordsQuizPage from './pages/DailyWordsQuizPage';
-import Explore from './pages/Explore';
 import Feed from './pages/Feed';
 import HashtagPostsPage from './pages/HashtagPostsPage';
 import Home from './pages/Home';
@@ -81,7 +80,6 @@ export const PAGES = {
     "CreateCommunity": CreateCommunity,
     "CreateStory": CreateStory,
     "DailyWordsQuizPage": DailyWordsQuizPage,
-    "Explore": Explore,
     "Feed": Feed,
     "HashtagPostsPage": HashtagPostsPage,
     "Home": Home,
