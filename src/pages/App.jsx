@@ -24,6 +24,7 @@ import InterestCommunityPage from './InterestCommunityPage';
 import HashtagPostsPage from './HashtagPostsPage';
 import DailyWordsQuizPage from './DailyWordsQuizPage'; // Import the new page
 import SearchResultsPage from './SearchResults';
+import AllCommunitiesPage from './AllCommunitiesPage';
 import { EditProfileForm } from '../components/profile/EditProfileForm';
 import { User, Post, Story } from '@/entities/all';
 import { LanguageProvider } from '../components/utils/i18n';
@@ -77,6 +78,7 @@ function AppRouter() {
   const [showHashtagPosts, setShowHashtagPosts] = useState(null);
   const [showDailyWordsQuiz, setShowDailyWordsQuiz] = useState(false); // Add new state for the quiz page
   const [showSearchResults, setShowSearchResults] = useState(null); // query string or null
+  const [showAllCommunities, setShowAllCommunities] = useState(false);
 
   // Cleanup script disabled to prevent blocking
   useEffect(() => {
@@ -107,6 +109,7 @@ function AppRouter() {
     setShowHashtagPosts(null);
     setShowDailyWordsQuiz(false); // Add to closeAllModals
     setShowSearchResults(null);
+    setShowAllCommunities(false);
   }, []);
 
   // Handle browser back button
@@ -300,8 +303,10 @@ function AppRouter() {
         setShowInterestCommunity({ name: interestName, color: interestColor });
       } else if (page === 'hashtag-posts') {
         setShowHashtagPosts({ name: hashtagName, color: hashtagColor });
-      } else if (page === 'daily-words-quiz') { // Add new navigation condition
+      } else if (page === 'daily-words-quiz') {
         setShowDailyWordsQuiz(true);
+      } else if (page === 'all-communities') {
+        setShowAllCommunities(true);
       } else if (page) {
         setActiveTab(page);
       }
@@ -619,7 +624,20 @@ function AppRouter() {
           </motion.div>
         )}
 
-        {showDailyWordsQuiz && ( // Add new AnimatePresence block for DailyWordsQuizPage
+        {showAllCommunities && (
+          <motion.div
+            key="all-communities"
+            className="absolute top-0 left-0 w-full h-full bg-white z-50 md:max-w-md md:mx-auto"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          >
+            <AllCommunitiesPage onBack={() => { setShowAllCommunities(false); setActiveTab('explore'); }} />
+          </motion.div>
+        )}
+
+        {showDailyWordsQuiz && (
           <motion.div
             key="daily-words-quiz"
             className="absolute top-0 left-0 w-full h-full bg-white z-50 md:max-w-md md:mx-auto"

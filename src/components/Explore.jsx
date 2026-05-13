@@ -373,7 +373,10 @@ export default function Explore() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-800">{t('popularCommunities')}</h2>
-            <button className="text-blue-600 font-medium text-sm hover:text-blue-700">
+            <button 
+              className="text-blue-600 font-medium text-sm hover:text-blue-700"
+              onClick={() => window.dispatchEvent(new CustomEvent('navigateTo', { detail: { page: 'all-communities' } }))}
+            >
               {t('viewAll')}
             </button>
           </div>
