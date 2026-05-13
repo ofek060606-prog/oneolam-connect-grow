@@ -252,11 +252,16 @@ function AppRouter() {
       // Always scroll to top when navigating
       scrollToTop();
 
-      // Close all specific overlay pages when navigating via global event
-      closeAllModals();
-
       // Push state for back button
       window.history.pushState({ page }, '', window.location.href);
+
+      if (page === 'search-results') {
+        setShowSearchResults(event.detail.query || '');
+        return;
+      }
+
+      // Close all specific overlay pages when navigating via global event
+      closeAllModals();
 
       if (page === 'chat') {
         // handleChatClick already pushes state, so skip here if called directly.
@@ -297,8 +302,6 @@ function AppRouter() {
         setShowHashtagPosts({ name: hashtagName, color: hashtagColor });
       } else if (page === 'daily-words-quiz') { // Add new navigation condition
         setShowDailyWordsQuiz(true);
-      } else if (page === 'search-results') {
-        setShowSearchResults(event.detail.query || '');
       } else if (page) {
         setActiveTab(page);
       }
