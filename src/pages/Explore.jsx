@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Community, Post } from '@/entities/all'; // Added Post entity import
 import { Search, RefreshCw, Users, Sparkles } from 'lucide-react';
-import { useTranslation } from '../components/utils/i18n';
+import { useTranslation, LanguageProvider } from '../components/utils/i18n';
 import { toast } from 'sonner';
 
 // New component for displaying individual trending posts
@@ -40,7 +40,7 @@ const CommunityCard = ({ community, onClick }) => {
   )
 };
 
-export default function Explore({ onChatClick, onSearch }) {
+function ExploreInner({ onChatClick, onSearch }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [communities, setCommunities] = useState([]);
@@ -222,5 +222,13 @@ export default function Explore({ onChatClick, onSearch }) {
         </section>
       </div>
     </div>
+  );
+}
+
+export default function Explore(props) {
+  return (
+    <LanguageProvider>
+      <ExploreInner {...props} />
+    </LanguageProvider>
   );
 }
