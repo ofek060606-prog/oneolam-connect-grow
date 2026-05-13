@@ -14,7 +14,11 @@ export default function HashtagPostsPage({ hashtagName, hashtagColor, onBack }) 
       setIsLoading(true);
       try {
         const allPosts = await Post.list('-created_date', 100);
-        const filteredPosts = allPosts.filter(p => p.tags && p.tags.includes(hashtagName));
+        const filteredPosts = allPosts.filter(p => 
+          p.tags && p.tags.some(tag => 
+            tag.replace(/^#/, '').toLowerCase() === hashtagName.replace(/^#/, '').toLowerCase()
+          )
+        );
         setPosts(filteredPosts);
       } catch (error) {
         console.error(`Error fetching posts for #${hashtagName}:`, error);
