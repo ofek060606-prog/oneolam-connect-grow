@@ -29,9 +29,12 @@ export const Chat = ({ onBack, recipient }) => {
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isConnected, setIsConnected] = useState(true); // mutual follow or I follow them
+  const [isConnected, setIsConnected] = useState(true);
   const [hasAlreadySentRequest, setHasAlreadySentRequest] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
+  // Ref-based guard to prevent race conditions on rapid sends
+  const requestSentRef = useRef(false);
 
   useEffect(() => {
     loadChatData();
@@ -67,7 +70,9 @@ export const Chat = ({ onBack, recipient }) => {
       // If not connected, check if I already sent at least one message (request already sent)
       if (!isFollowing) {
         const mySentMessages = allMessages.filter(m => m.created_by === user.email);
-        setHasAlreadySentRequest(mySentMessages.length > 0);
+        const alreadySent = mySentMessages.length > 0;
+        setHasAlreadySentRequest(alreadySent);
+        requestSentRef.current = alreadySent;
       }
     } catch (error) {
       console.error('Error loading chat:', error);
@@ -82,8 +87,16 @@ export const Chat = ({ onBack, recipient }) => {
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !currentUser || !recipientEmail) return;
-    if (!isConnected && hasAlreadySentRequest) return; // Block extra request messages
+    // Use ref for instant blocking (prevents race conditions on rapid taps)
+    if (!isConnected && requestSentRef.current) return;
+    if (isSending) return;
 
+    // If this is a request message, block immediately via ref before any async work
+    if (!isConnected) {
+      requestSentRef.current = true;
+    }
+
+    setIsSending(true);
     const conversationId = [currentUser.email, recipientEmail].sort().join('-');
 
     try {
@@ -104,6 +117,12 @@ export const Chat = ({ onBack, recipient }) => {
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      // Revert the ref guard if send failed
+      if (!isConnected) {
+        requestSentRef.current = false;
+      }
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -228,9 +247,9 @@ export const Chat = ({ onBack, recipient }) => {
             </div>
             <button
               onClick={sendMessage}
-              disabled={!newMessage.trim()}
+              disabled={!newMessage.trim() || isSending}
               className={`p-3 rounded-full transition-all ${
-                newMessage.trim()
+                newMessage.trim() && !isSending
                   ? 'bg-blue-500 text-white hover:bg-blue-600'
                   : 'bg-slate-200 text-slate-400'
               }`}
