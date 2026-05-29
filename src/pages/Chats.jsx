@@ -2,8 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Follow } from '@/entities/all';
 import { MessageSquare, Search, Inbox, MailQuestion } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format, isToday, isYesterday, isThisWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+
+// Returns a human-friendly timestamp: "Just now", "5 min ago", "Yesterday", "Mon", or "12 Jan"
+function formatConvoTime(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMin = Math.floor(diffMs / 60000);
+
+  if (diffMin < 1) return 'Just now';
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (isToday(date)) return format(date, 'HH:mm');
+  if (isYesterday(date)) return 'Yesterday';
+  if (isThisWeek(date, { weekStartsOn: 0 })) return format(date, 'EEE');
+  return format(date, 'd MMM');
+}
 
 export default function ChatsPage() {
   const [conversations, setConversations] = useState([]);
@@ -126,7 +142,7 @@ export default function ChatsPage() {
             {convo.name}
           </h3>
           <p className="text-xs text-slate-500 shrink-0 ml-2">
-            {formatDistanceToNow(new Date(convo.lastMessage.created_date), { addSuffix: true, locale: enUS })}
+            {formatConvoTime(convo.lastMessage.created_date)}
           </p>
         </div>
         <p className={`text-sm truncate ${convo.hasUnread ? 'font-semibold text-slate-700' : 'text-slate-500'}`}>

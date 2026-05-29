@@ -2,6 +2,24 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Follow } from '@/entities/all';
 import { ArrowLeft, Send, Lock, User as UserIcon } from 'lucide-react';
+import { format, isToday, isYesterday } from 'date-fns';
+
+function formatMsgTime(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  if (isToday(date)) return format(date, 'HH:mm');
+  if (isYesterday(date)) return `Yesterday ${format(date, 'HH:mm')}`;
+  return format(date, 'd MMM HH:mm');
+}
+
+// Returns a date separator label for grouping messages
+function dateSeparator(dateStr) {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  if (isToday(date)) return 'Today';
+  if (isYesterday(date)) return 'Yesterday';
+  return format(date, 'EEEE, d MMMM');
+}
 
 export const Chat = ({ onBack, recipient }) => {
   const recipientEmail = recipient?.email;
@@ -139,21 +157,42 @@ export const Chat = ({ onBack, recipient }) => {
             <p className="text-slate-500 text-sm">Send your first message to {recipientName}</p>
           </div>
         ) : (
-          messages.map((message) => {
+          messages.map((message, idx) => {
             const isMine = message.created_by === currentUser?.email;
+            const prevMessage = messages[idx - 1];
+            const prevDay = prevMessage?.created_date
+              ? format(new Date(prevMessage.created_date), 'yyyy-MM-dd')
+              : null;
+            const thisDay = message.created_date
+              ? format(new Date(message.created_date), 'yyyy-MM-dd')
+              : null;
+            const showSeparator = thisDay && thisDay !== prevDay;
+
             return (
-              <div key={message.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                  isMine
-                    ? 'bg-blue-500 text-white rounded-br-md'
-                    : 'bg-slate-100 text-slate-900 rounded-bl-md'
-                }`}>
-                  {!isMine && (
-                    <p className="text-xs font-medium text-blue-600 mb-1">{message.sender_name}</p>
-                  )}
-                  <p className="text-sm">{message.content}</p>
+              <React.Fragment key={message.id || idx}>
+                {showSeparator && (
+                  <div className="flex items-center justify-center my-3">
+                    <span className="text-xs text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+                      {dateSeparator(message.created_date)}
+                    </span>
+                  </div>
+                )}
+                <div className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                    isMine
+                      ? 'bg-blue-500 text-white rounded-br-md'
+                      : 'bg-slate-100 text-slate-900 rounded-bl-md'
+                  }`}>
+                    {!isMine && (
+                      <p className="text-xs font-medium text-blue-600 mb-1">{message.sender_name}</p>
+                    )}
+                    <p className="text-sm">{message.content}</p>
+                    <p className={`text-xs mt-1 ${isMine ? 'text-blue-200' : 'text-slate-400'}`}>
+                      {formatMsgTime(message.created_date)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </React.Fragment>
             );
           })
         )}
