@@ -33,8 +33,10 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
 
   // Utility function for formatting relative time
   const formatRelativeTime = useCallback((dateString) => {
-    if (!dateString) return t('justNow'); // Use translation for "Just now"
-    const date = new Date(dateString);
+    if (!dateString) return t('justNow');
+    // Ensure UTC parsing: append Z if no timezone designator present
+    const normalized = /[Zz]|[+-]\d{2}:?\d{2}$/.test(dateString) ? dateString : dateString + 'Z';
+    const date = new Date(normalized);
     const now = new Date();
 
     // If the post was created less than a minute ago, show "Just now"
