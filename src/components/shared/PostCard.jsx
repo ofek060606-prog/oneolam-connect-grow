@@ -297,8 +297,8 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
   };
 
   const handleChatClick = () => {
-    if (onChatClick && post.created_by && post.author_name) {
-      onChatClick(post.created_by, post.author_name);
+    if (onChatClick && post.created_by) {
+      onChatClick(post.created_by, post.author_name || post.created_by);
     }
   };
 

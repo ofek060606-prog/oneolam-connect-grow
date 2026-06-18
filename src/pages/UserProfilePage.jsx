@@ -18,27 +18,44 @@ export default function UserProfilePage({ userEmail, onBack, onChatClick }) {
     const fetchProfileData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const [pUser, cUser] = await Promise.all([
-                User.filter({ created_by: userEmail }).then(res => res[0]),
-                User.me()
-            ]);
-
-            if (!pUser) {
-                toast.error(t('toast_user_not_found'));
-                onBack();
-                return;
-            }
-            
-            setProfileUser(pUser);
+            const cUser = await User.me();
             setCurrentUser(cUser);
 
-            const userPosts = await Post.filter({ created_by: pUser.email }, '-created_date');
+            // Build a minimal profile from the email — User RLS may block filter for non-admins.
+            // Fetch posts to extract author info (name, avatar) from their own posts.
+            const [userPosts, allUsers] = await Promise.all([
+                Post.filter({ created_by: userEmail }, '-created_date'),
+                User.list().catch(() => [])
+            ]);
+
+            // Try to find the user from the list (works if admin or self), otherwise derive from posts
+            const foundUser = allUsers.find(u => u.email === userEmail || u.created_by === userEmail);
+            const firstPost = userPosts[0];
+
+            const derivedUser = foundUser || (firstPost ? {
+                email: userEmail,
+                full_name: firstPost.author_name || userEmail,
+                avatar: firstPost.author_avatar || null,
+                bio: null,
+                account_privacy: 'public',
+            } : null);
+
+            if (!derivedUser) {
+                // Last resort: construct minimal profile from the email itself
+                setProfileUser({ email: userEmail, full_name: userEmail, avatar: null, bio: null, account_privacy: 'public' });
+                setCurrentUser(cUser);
+                setPosts([]);
+                setIsLoading(false);
+                return;
+            }
+
+            setProfileUser(derivedUser);
             setPosts(userPosts);
 
             // Check connection status
             const existingFollow = await Follow.filter({
                 follower_email: cUser.email,
-                following_email: pUser.email
+                following_email: userEmail
             });
 
             if (existingFollow.length > 0) {
@@ -68,7 +85,7 @@ export default function UserProfilePage({ userEmail, onBack, onChatClick }) {
             if (connectionStatus === 'none') {
                 const newFollow = await Follow.create({
                     follower_email: currentUser.email,
-                    following_email: profileUser.email,
+                    following_email: userEmail,
                     follower_name: currentUser.full_name,
                     following_name: profileUser.full_name,
                     status: profileUser.account_privacy === 'private' ? 'pending' : 'approved',
@@ -143,7 +160,7 @@ export default function UserProfilePage({ userEmail, onBack, onChatClick }) {
                 
                 <div className="flex items-center space-x-2 mt-4">
                     {renderConnectionButton()}
-                    <Button onClick={() => onChatClick(profileUser.email, profileUser.full_name)} variant="outline" className="bg-white">
+                    <Button onClick={() => onChatClick(userEmail, profileUser.full_name)} variant="outline" className="bg-white">
                         <MessageSquare className="w-4 h-4 mr-2" />
                         {t('message')}
                     </Button>
