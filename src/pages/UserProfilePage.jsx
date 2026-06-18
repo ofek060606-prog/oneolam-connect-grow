@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { User, Post, Follow } from '@/entities/all';
 import { ArrowLeft, UserPlus, MessageSquare, Check, MoreHorizontal, Clock, Lock } from 'lucide-react';
@@ -20,7 +19,7 @@ export default function UserProfilePage({ userEmail, onBack, onChatClick }) {
         setIsLoading(true);
         try {
             const [pUser, cUser] = await Promise.all([
-                User.filter({ email: userEmail }).then(res => res[0]),
+                User.filter({ created_by: userEmail }).then(res => res[0]),
                 User.me()
             ]);
 

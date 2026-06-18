@@ -387,7 +387,7 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
             <span className="text-sm font-medium">{t('share')}</span>
           </button>
 
-          {onChatClick && post.created_by && currentUser && post.created_by !== currentUser.email && (
+          {onChatClick && post.created_by && (!currentUser || post.created_by !== currentUser.email) && (
             <button
               onClick={handleChatClick}
               className="flex items-center space-x-2 text-slate-500 hover:text-blue-500 transition-colors"
