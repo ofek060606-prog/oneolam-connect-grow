@@ -122,7 +122,7 @@ function FeedInner({ onChatClick }) {
             <PostCard
               key={post.id}
               post={post}
-              onChatClick={post?.created_by && post?.author_name ? () => onChatClick(post.created_by, post.author_name) : undefined}
+              onChatClick={post?.created_by ? () => onChatClick(post.created_by, post.author_name || post.created_by) : undefined}
               onDelete={handlePostDeleted} />
 
             )
