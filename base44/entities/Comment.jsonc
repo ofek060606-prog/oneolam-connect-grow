@@ -1,0 +1,42 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "The ID of the post this comment belongs to"
+    },
+    "content": {
+      "type": "string",
+      "description": "The text content of the comment"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Display name of the comment's author"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "URL of the author's profile picture"
+    }
+  },
+  "required": [
+    "post_id",
+    "content",
+    "author_name"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

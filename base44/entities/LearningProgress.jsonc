@@ -1,0 +1,55 @@
+{
+  "name": "LearningProgress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "last_learned_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The last date the user completed their daily words (YYYY-MM-DD)"
+    },
+    "streak_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Current daily learning streak"
+    },
+    "total_words_learned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of words learned over time"
+    }
+  },
+  "required": [
+    "user_email",
+    "last_learned_date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

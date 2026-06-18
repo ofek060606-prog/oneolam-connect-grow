@@ -373,7 +373,7 @@ function AppRouter() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className={`transition-transform duration-300 ease-in-out ${showChat || showCreateStory || showNotifications || showQuestionDetail || showPostDetail || showAiMatchmaker || showConnections || showSavedPosts || showPayment || showUserProfile || showAdminDashboard || showCommunityPage || showCreateCommunity || showInterestCommunity || showHashtagPosts || showOnboarding || showDailyWordsQuiz || showSearchResults ? 'transform -translate-x-full md:!transform-none' : ''}`}>
+      <div className={`transition-transform duration-300 ease-in-out ${showChat || showCreateStory || showNotifications || showQuestionDetail || showPostDetail || showAiMatchmaker || showConnections || showSavedPosts || showPayment || showUserProfile || showAdminDashboard || showCommunityPage || showCreateCommunity || showInterestCommunity || showHashtagPosts || showOnboarding || showDailyWordsQuiz || showSearchResults ? 'transform -translate-x-full md:!transform-none md:pointer-events-none' : ''}`}>
         <div className="md:max-w-md md:mx-auto md:shadow-lg md:rounded-lg md:overflow-hidden min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
           {renderActiveComponent()}
           <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />

@@ -1,0 +1,53 @@
+{
+  "name": "MatchmakerLike",
+  "type": "object",
+  "properties": {
+    "liker_email": {
+      "type": "string"
+    },
+    "liker_name": {
+      "type": "string"
+    },
+    "liked_email": {
+      "type": "string"
+    },
+    "is_super_like": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "liker_email",
+    "liker_name",
+    "liked_email"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "liker_email": "{{user.email}}"
+        },
+        {
+          "liked_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "liker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

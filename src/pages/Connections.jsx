@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { User, Follow } from '@/entities/all';
 import { ArrowLeft, Check, X, Clock } from 'lucide-react';
 import { toast } from 'sonner';
-import { useTranslation } from '../components/utils/i18n';
+import { useTranslation, LanguageProvider } from '../components/utils/i18n';
 import { Button } from '@/components/ui/button';
 
-export default function ConnectionsPage({ onBack, onChatClick }) {
+function ConnectionsPageInner({ onBack, onChatClick }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -194,5 +194,13 @@ export default function ConnectionsPage({ onBack, onChatClick }) {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ConnectionsPage(props) {
+  return (
+    <LanguageProvider>
+      <ConnectionsPageInner {...props} />
+    </LanguageProvider>
   );
 }

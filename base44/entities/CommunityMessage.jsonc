@@ -1,0 +1,47 @@
+{
+  "name": "CommunityMessage",
+  "type": "object",
+  "properties": {
+    "community_name": {
+      "type": "string",
+      "description": "Name of the community/interest"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of message sender"
+    },
+    "sender_avatar": {
+      "type": "string",
+      "description": "Avatar URL of sender"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether message is pinned by admin"
+    }
+  },
+  "required": [
+    "community_name",
+    "sender_name",
+    "content"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

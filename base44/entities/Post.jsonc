@@ -1,0 +1,66 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "Post content text"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL of the post image"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL of the post video"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of likes"
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of comments"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Author display name"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Author profile picture URL"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Post hashtags"
+    },
+    "community_name": {
+      "type": "string",
+      "description": "Name of community this post belongs to (optional)"
+    }
+  },
+  "required": [
+    "content",
+    "author_name"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

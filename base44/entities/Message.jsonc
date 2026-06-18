@@ -1,0 +1,70 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of message recipient"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of sender"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of recipient"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Optional image attachment"
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "Conversation identifier"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether message has been read by recipient"
+    }
+  },
+  "required": [
+    "recipient_email",
+    "sender_name",
+    "recipient_name",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "recipient_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

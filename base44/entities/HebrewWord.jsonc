@@ -1,0 +1,64 @@
+{
+  "name": "HebrewWord",
+  "type": "object",
+  "properties": {
+    "word": {
+      "type": "string"
+    },
+    "translation_en": {
+      "type": "string"
+    },
+    "translation_he": {
+      "type": "string"
+    },
+    "translation_es": {
+      "type": "string"
+    },
+    "translation_fr": {
+      "type": "string"
+    },
+    "pronunciation": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "description": "The difficulty level of the word"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the word (Basic, Colors, Animals, etc.)"
+    },
+    "example_sentence_he": {
+      "type": "string"
+    },
+    "example_sentence_en": {
+      "type": "string"
+    },
+    "example_sentence_es": {
+      "type": "string"
+    },
+    "example_sentence_fr": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "word",
+    "translation_en",
+    "translation_he",
+    "pronunciation",
+    "difficulty",
+    "category"
+  ],
+  "rls": {
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

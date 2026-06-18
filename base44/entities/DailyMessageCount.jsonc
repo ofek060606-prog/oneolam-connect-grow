@@ -1,0 +1,55 @@
+{
+  "name": "DailyMessageCount",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "community_name": {
+      "type": "string",
+      "description": "Name of the community"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date in YYYY-MM-DD format"
+    },
+    "message_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of messages sent today in this community"
+    }
+  },
+  "required": [
+    "user_email",
+    "community_name",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

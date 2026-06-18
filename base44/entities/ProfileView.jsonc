@@ -1,0 +1,55 @@
+{
+  "name": "ProfileView",
+  "type": "object",
+  "properties": {
+    "viewer_email": {
+      "type": "string",
+      "description": "Email of the user who viewed the profile"
+    },
+    "viewer_name": {
+      "type": "string",
+      "description": "Name of the user who viewed the profile"
+    },
+    "viewer_avatar": {
+      "type": "string",
+      "description": "Avatar of the user who viewed the profile"
+    },
+    "viewed_email": {
+      "type": "string",
+      "description": "Email of the user whose profile was viewed"
+    }
+  },
+  "required": [
+    "viewer_email",
+    "viewed_email"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "viewer_email": "{{user.email}}"
+        },
+        {
+          "viewed_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

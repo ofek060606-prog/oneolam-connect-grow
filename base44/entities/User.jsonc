@@ -1,0 +1,104 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "subscription_tier": {
+      "type": "string",
+      "enum": [
+        "free",
+        "premium"
+      ],
+      "default": "free",
+      "description": "Subscription level of the user"
+    },
+    "bio": {
+      "type": "string",
+      "description": "User's short biography"
+    },
+    "location": {
+      "type": "string",
+      "description": "User's city and country"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "User's date of birth, used to calculate age"
+    },
+    "age": {
+      "type": "number",
+      "description": "User's age, calculated from date_of_birth"
+    },
+    "spoken_languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Languages the user speaks"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of user achievements"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User's interests and passions"
+    },
+    "is_banned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user is banned from the platform"
+    },
+    "preferred_language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "he",
+        "es",
+        "fr"
+      ],
+      "default": "en",
+      "description": "User's preferred interface language"
+    },
+    "saved_posts_visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "public"
+      ],
+      "default": "private",
+      "description": "Whether saved posts are visible to others"
+    },
+    "account_privacy": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private"
+      ],
+      "default": "public",
+      "description": "Whether account is private (requires approval to follow) or public"
+    },
+    "photo_gallery": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Additional profile photos for AI Matchmaker",
+      "maxItems": 5
+    }
+  },
+  "required": [
+    "bio",
+    "location",
+    "date_of_birth",
+    "age",
+    "spoken_languages",
+    "achievements",
+    "interests"
+  ]
+}

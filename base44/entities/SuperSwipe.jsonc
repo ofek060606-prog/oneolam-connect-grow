@@ -1,0 +1,63 @@
+{
+  "name": "SuperSwipe",
+  "type": "object",
+  "properties": {
+    "sender_email": {
+      "type": "string",
+      "description": "Email of user who sent the superswipe"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of user who sent the superswipe"
+    },
+    "receiver_email": {
+      "type": "string",
+      "description": "Email of user who received the superswipe"
+    },
+    "receiver_name": {
+      "type": "string",
+      "description": "Name of user who received the superswipe"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when superswipe was sent"
+    }
+  },
+  "required": [
+    "sender_email",
+    "sender_name",
+    "receiver_email",
+    "receiver_name",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "sender_email": "{{user.email}}"
+        },
+        {
+          "receiver_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

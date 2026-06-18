@@ -1,0 +1,48 @@
+{
+  "name": "CommunityMember",
+  "type": "object",
+  "properties": {
+    "community_id": {
+      "type": "string"
+    },
+    "member_email": {
+      "type": "string"
+    },
+    "member_name": {
+      "type": "string"
+    },
+    "member_avatar": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "community_id",
+    "member_email"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "member_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

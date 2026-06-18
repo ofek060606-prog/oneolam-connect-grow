@@ -1,0 +1,51 @@
+{
+  "name": "SavedPost",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "The ID of the saved post"
+    },
+    "post_title": {
+      "type": "string",
+      "description": "Title or preview of the saved post"
+    },
+    "post_author": {
+      "type": "string",
+      "description": "Author of the saved post"
+    },
+    "post_image": {
+      "type": "string",
+      "description": "Image URL of the saved post"
+    }
+  },
+  "required": [
+    "post_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

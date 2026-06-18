@@ -1,0 +1,49 @@
+{
+  "name": "Story",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "description": "Story image URL"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Story video URL"
+    },
+    "text_overlay": {
+      "type": "string",
+      "description": "Optional text overlay on story"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Story author name"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Author profile picture"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When story expires (24 hours)"
+    }
+  },
+  "required": [
+    "author_name"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

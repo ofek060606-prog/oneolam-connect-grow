@@ -1,0 +1,47 @@
+{
+  "name": "Answer",
+  "type": "object",
+  "properties": {
+    "question_id": {
+      "type": "string",
+      "description": "The ID of the question this answer belongs to"
+    },
+    "content": {
+      "type": "string",
+      "description": "The text content of the answer"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Display name of the answer's author"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "URL of the author's profile picture"
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0,
+      "description": "Answer upvotes"
+    }
+  },
+  "required": [
+    "question_id",
+    "content",
+    "author_name"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

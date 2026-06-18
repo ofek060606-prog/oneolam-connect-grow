@@ -1,0 +1,70 @@
+{
+  "name": "Follow",
+  "type": "object",
+  "properties": {
+    "follower_email": {
+      "type": "string",
+      "description": "Email of user who is following"
+    },
+    "following_email": {
+      "type": "string",
+      "description": "Email of user being followed"
+    },
+    "follower_name": {
+      "type": "string",
+      "description": "Name of follower"
+    },
+    "following_name": {
+      "type": "string",
+      "description": "Name of person being followed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the follow request - now defaults to pending"
+    }
+  },
+  "required": [
+    "follower_email",
+    "following_email",
+    "follower_name",
+    "following_name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "follower_email": "{{user.email}}"
+        },
+        {
+          "following_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "following_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

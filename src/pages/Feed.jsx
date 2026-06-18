@@ -114,8 +114,8 @@ function FeedInner({ onChatClick }) {
           <div>
             {posts.length === 0 && !isLoading ?
             <div className="text-center py-16 text-slate-500">
-                <p className="font-semibold text-lg mb-2">{t('feed.noPosts.title')}</p>
-                <p>{t('feed.noPosts.subtitle')}</p>
+                <p className="font-semibold text-lg mb-2">{t('no_posts_yet_title')}</p>
+                <p>{t('no_posts_yet_description')}</p>
               </div> :
 
             posts.filter((post) => post && post.id).map((post) =>

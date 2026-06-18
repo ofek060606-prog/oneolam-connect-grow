@@ -1,0 +1,74 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of the user receiving the notification"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Email of the user who triggered the notification"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of the user who triggered the notification"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "like",
+        "comment",
+        "follow",
+        "report_post",
+        "report_user",
+        "matchmaker_like",
+        "match"
+      ],
+      "description": "Type of notification"
+    },
+    "content": {
+      "type": "string",
+      "description": "Notification message"
+    },
+    "post_id": {
+      "type": "string",
+      "description": "Related post ID if applicable"
+    },
+    "reported_user_email": {
+      "type": "string",
+      "description": "Email of the reported user, if applicable"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether notification has been read"
+    }
+  },
+  "required": [
+    "recipient_email",
+    "sender_email",
+    "sender_name",
+    "type",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "recipient_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

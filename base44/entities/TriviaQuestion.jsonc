@@ -1,0 +1,88 @@
+{
+  "name": "TriviaQuestion",
+  "type": "object",
+  "properties": {
+    "question_en": {
+      "type": "string"
+    },
+    "question_he": {
+      "type": "string"
+    },
+    "question_es": {
+      "type": "string"
+    },
+    "question_fr": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "options_en": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "options_he": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "options_es": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "options_fr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "correct_answer_en": {
+      "type": "string"
+    },
+    "correct_answer_he": {
+      "type": "string"
+    },
+    "correct_answer_es": {
+      "type": "string"
+    },
+    "correct_answer_fr": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "History",
+        "Tanakh",
+        "Famous Figures",
+        "Israeli Culture",
+        "Food",
+        "General"
+      ]
+    },
+    "is_premium": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "question_en",
+    "question_he",
+    "options_en",
+    "options_he",
+    "correct_answer_en",
+    "correct_answer_he",
+    "category"
+  ],
+  "rls": {
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
