@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, MessageCircle, Share, Bookmark, MoreHorizontal, Trash2, Flag } from 'lucide-react';
+import { Heart, MessageCircle, Share, Bookmark, MoreHorizontal, Trash2, Flag, Send } from 'lucide-react';
 import { Like, SavedPost, Comment, User, Post } from '@/entities/all';
 import { CommentSection } from './CommentSection';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -386,6 +386,15 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
             <Share className="w-5 h-5" />
             <span className="text-sm font-medium">{t('share')}</span>
           </button>
+
+          {onChatClick && post.created_by && currentUser && post.created_by !== currentUser.email && (
+            <button
+              onClick={handleChatClick}
+              className="flex items-center space-x-2 text-slate-500 hover:text-blue-500 transition-colors"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          )}
         </div>
         
         <div className="flex items-center space-x-2">

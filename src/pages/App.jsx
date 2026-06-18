@@ -532,7 +532,7 @@ function AppRouter() {
         {showOnboarding && (
           <motion.div
             key="onboarding"
-            className="absolute top-0 left-0 w-full h-full bg-white z-[100] md:max-w-md md:mx-auto"
+            className="fixed top-0 left-0 w-full h-full bg-white z-[100] md:max-w-md md:left-1/2 md:-translate-x-1/2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
