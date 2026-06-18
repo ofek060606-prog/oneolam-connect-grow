@@ -254,7 +254,7 @@ export default function DailyWordsQuizPage({ onBack }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
           <p className="text-slate-600 text-lg">{t('loadingWords')}</p>
@@ -264,7 +264,7 @@ export default function DailyWordsQuizPage({ onBack }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pb-20">
+    <div className="h-screen overflow-y-auto bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pb-20">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-lg sticky top-0 z-40 border-b border-blue-100 p-4">
         <div className="flex items-center justify-between">
