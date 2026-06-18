@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/all';
 import { UploadFile } from '@/integrations/Core';
@@ -164,7 +163,7 @@ export const EditProfileForm = ({ onBack, onSave, isOnboarding = false }) => {
   }
   
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="h-full overflow-y-auto bg-blue-50">
        <div className="bg-white/80 backdrop-blur-lg sticky top-0 z-40 p-4 border-b border-blue-100 flex items-center justify-between">
         <div className="flex items-center">
           {!isOnboarding && onBack && (
