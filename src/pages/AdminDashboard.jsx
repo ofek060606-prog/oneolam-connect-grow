@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Community, Notification } from '@/entities/all';
 import { ArrowLeft, Users, Shield, Crown, MoreVertical, Ban, ShieldCheck, CheckCircle, XCircle } from 'lucide-react';
@@ -28,10 +27,29 @@ export default function AdminDashboard({ onBack }) {
   const [securityAlerts, setSecurityAlerts] = useState([]);
   const [stats, setStats] = useState({ total: 0, premium: 0, admins: 0, banned: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    fetchData();
+    verifyAccess();
   }, []);
+
+  // Defense-in-depth: confirm the current user is an admin before loading
+  // any admin data or exposing the management UI. Non-admins are sent back.
+  const verifyAccess = async () => {
+    try {
+      const currentUser = await User.me();
+      if (currentUser?.role !== 'admin') {
+        toast.error('Access denied: administrators only.');
+        onBack?.();
+        return;
+      }
+      setIsAuthorized(true);
+      fetchData();
+    } catch (e) {
+      toast.error('Access denied: administrators only.');
+      onBack?.();
+    }
+  };
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -138,6 +156,15 @@ export default function AdminDashboard({ onBack }) {
       <p className="text-3xl font-bold text-slate-900 mt-2">{value}</p>
     </div>
   );
+
+  // Never render the admin UI until the current user's admin role is confirmed.
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
+        <p className="text-slate-600">Checking access…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">

@@ -249,7 +249,7 @@ function AppRouter() {
     };
     checkUserStatus();
 
-    const handleNavigate = (event) => {
+    const handleNavigate = async (event) => {
       const { page, email, name, questionId, communityId, communityName, interestName, interestColor, postId, hashtagName, hashtagColor } = event.detail;
 
       // Always scroll to top when navigating
