@@ -4,6 +4,17 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
+    // Authenticate the caller. This is an admin/scheduled task that uses
+    // service-role privileges, so require an authenticated admin to prevent
+    // unauthenticated abuse (email scraping / bulk email spam).
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: admin role required' }, { status: 403 });
+    }
+
     // Use service role for scheduled/admin task
     const words = await base44.asServiceRole.entities.HebrewWord.list();
     if (!words || words.length === 0) {
@@ -20,7 +31,8 @@ Deno.serve(async (req) => {
     }
 
     // Send email to each user
-    const results = [];
+    let sent = 0;
+    let failed = 0;
     for (const user of users) {
       if (!user.email) continue;
 
@@ -51,17 +63,17 @@ Deno.serve(async (req) => {
           subject: `✨ Hebrew Word of the Day: ${word.word}`,
           body
         });
-        results.push({ email: user.email, status: 'sent' });
+        sent++;
       } catch (err) {
-        results.push({ email: user.email, status: 'failed', error: err.message });
+        failed++;
       }
     }
 
-    return Response.json({ 
-      word: word.word, 
-      sent: results.filter(r => r.status === 'sent').length,
-      failed: results.filter(r => r.status === 'failed').length,
-      results 
+    // Return only aggregate counts — never expose user emails in the response.
+    return Response.json({
+      word: word.word,
+      sent,
+      failed
     });
 
   } catch (error) {
