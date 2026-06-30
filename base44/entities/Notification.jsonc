@@ -53,10 +53,11 @@
     "content"
   ],
   "rls": {
+    "create": null,
     "read": {
       "$or": [
         {
-          "recipient_email": "{{user.email}}"
+          "data.recipient_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -65,7 +66,12 @@
         }
       ]
     },
-    "write": {
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
       "user_condition": {
         "role": "admin"
       }

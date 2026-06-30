@@ -26,13 +26,13 @@
   ],
   "rls": {
     "create": {
-      "data.created_by": "{{user.email}}"
+      "created_by_id": "{{user.id}}"
     },
     "read": {},
     "update": {
       "$or": [
         {
-          "data.created_by": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -44,7 +44,7 @@
     "delete": {
       "$or": [
         {
-          "data.created_by": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
         },
         {
           "user_condition": {

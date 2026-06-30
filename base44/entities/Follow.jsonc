@@ -36,13 +36,14 @@
     "following_name"
   ],
   "rls": {
+    "create": null,
     "read": {
       "$or": [
         {
-          "follower_email": "{{user.email}}"
+          "data.follower_email": "{{user.email}}"
         },
         {
-          "following_email": "{{user.email}}"
+          "data.following_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -51,13 +52,28 @@
         }
       ]
     },
-    "write": {
+    "update": {
       "$or": [
         {
-          "created_by": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
         },
         {
-          "following_email": "{{user.email}}"
+          "data.following_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.following_email": "{{user.email}}"
         },
         {
           "user_condition": {

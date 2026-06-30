@@ -22,13 +22,14 @@
     "liked_email"
   ],
   "rls": {
+    "create": null,
     "read": {
       "$or": [
         {
-          "liker_email": "{{user.email}}"
+          "data.liker_email": "{{user.email}}"
         },
         {
-          "liked_email": "{{user.email}}"
+          "data.liked_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -37,10 +38,22 @@
         }
       ]
     },
-    "write": {
+    "update": {
       "$or": [
         {
-          "liker_email": "{{user.email}}"
+          "data.liker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.liker_email": "{{user.email}}"
         },
         {
           "user_condition": {
