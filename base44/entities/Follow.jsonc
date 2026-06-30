@@ -36,7 +36,18 @@
     "following_name"
   ],
   "rls": {
-    "create": null,
+    "create": {
+      "$or": [
+        {
+          "data.follower_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
     "read": {
       "$or": [
         {

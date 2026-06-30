@@ -22,7 +22,18 @@
     "liked_email"
   ],
   "rls": {
-    "create": null,
+    "create": {
+      "$or": [
+        {
+          "data.liker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
     "read": {
       "$or": [
         {
