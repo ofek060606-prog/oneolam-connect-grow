@@ -114,12 +114,8 @@ export const RealStripePayment = ({ onSuccess, onError }) => {
       const confirmData = await confirmResponse.json();
 
       if (confirmData.success) {
-        // עדכון המשתמש ל-premium
-        await User.updateMyUserData({
-          subscription_tier: 'premium',
-          subscription_date: new Date().toISOString()
-        });
-
+        // Subscription tier is upgraded server-side via the payment confirmation
+        // endpoint (service-role only). Never trust client-side tier updates.
         toast.success("Payment successful! Welcome to OneOlam Premium! 🎉");
         onSuccess?.();
       } else {
