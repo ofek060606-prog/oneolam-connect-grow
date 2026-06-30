@@ -32,13 +32,16 @@
     "date"
   ],
   "rls": {
+    "create": {
+      "data.sender_email": "{{user.email}}"
+    },
     "read": {
       "$or": [
         {
-          "sender_email": "{{user.email}}"
+          "data.sender_email": "{{user.email}}"
         },
         {
-          "receiver_email": "{{user.email}}"
+          "data.receiver_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -47,10 +50,22 @@
         }
       ]
     },
-    "write": {
+    "update": {
       "$or": [
         {
-          "created_by": "{{user.email}}"
+          "data.sender_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.sender_email": "{{user.email}}"
         },
         {
           "user_condition": {

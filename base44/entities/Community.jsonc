@@ -36,10 +36,13 @@
     "creator_name"
   ],
   "rls": {
+    "create": {
+      "data.creator_email": "{{user.email}}"
+    },
     "read": {
       "$or": [
         {
-          "is_approved": true
+          "data.is_approved": true
         },
         {
           "user_condition": {
@@ -48,11 +51,24 @@
         }
       ]
     },
-    "write": {
+    "update": {
       "$or": [
         {
-          "created_by": "{{user.email}}",
-          "is_approved": false
+          "data.creator_email": "{{user.email}}",
+          "data.is_approved": false
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.creator_email": "{{user.email}}",
+          "data.is_approved": false
         },
         {
           "user_condition": {

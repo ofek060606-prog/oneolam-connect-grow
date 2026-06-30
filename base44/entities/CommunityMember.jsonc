@@ -20,10 +20,13 @@
     "member_email"
   ],
   "rls": {
+    "create": {
+      "data.member_email": "{{user.email}}"
+    },
     "read": {
       "$or": [
         {
-          "member_email": "{{user.email}}"
+          "data.member_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -32,10 +35,22 @@
         }
       ]
     },
-    "write": {
+    "update": {
       "$or": [
         {
-          "created_by": "{{user.email}}"
+          "data.member_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.member_email": "{{user.email}}"
         },
         {
           "user_condition": {
