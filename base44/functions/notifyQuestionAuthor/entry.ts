@@ -35,12 +35,16 @@ Deno.serve(async (req) => {
             return Response.json({ message: 'Author answered their own question, skipping notification' });
         }
 
+        // Use the authenticated user's name (trusted) rather than the
+        // client-supplied answer.author_name, which could be spoofed for
+        // social-engineering / phishing against the question author.
+        const senderName = user.full_name || 'Unknown';
         await base44.asServiceRole.entities.Notification.create({
             recipient_email: question.created_by,
             sender_email: answer.created_by,
-            sender_name: answer.author_name,
+            sender_name: senderName,
             type: 'comment',
-            content: `${answer.author_name} answered your question: "${question.title}"`,
+            content: `${senderName} answered your question: "${question.title}"`,
             post_id: question.id,
             is_read: false,
         });
