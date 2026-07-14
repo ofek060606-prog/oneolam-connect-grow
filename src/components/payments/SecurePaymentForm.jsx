@@ -77,8 +77,9 @@ const CheckoutForm = ({ onSuccess, onError }) => {
         });
 
         if (confirmResponse.ok) {
-          // עדכון המנוי במקומי
-          await User.updateMyUserData({ subscription_tier: 'premium' });
+          // Subscription tier is upgraded server-side by the payment confirmation
+          // endpoint (service-role only). Never update subscription_tier from the
+          // client — that would let users grant themselves premium for free.
           onSuccess();
         } else {
           onError('Payment verification failed');

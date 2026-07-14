@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { User, Post, Notification } from '@/entities/all';
+import { User } from '@/entities/all';
 import { UploadFile } from '@/integrations/Core';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Image, X, Loader2 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
-import { moderateContent, checkRateLimit } from '../utils/contentModeration';
+import { createPost } from "@/functions/createPost";
 
 export const CreatePost = ({ onPostCreated, communityId = null, communityName = null }) => {
   const [content, setContent] = useState('');
@@ -76,41 +76,11 @@ export const CreatePost = ({ onPostCreated, communityId = null, communityName = 
         return;
     }
     
-    // בדיקת rate limiting
-    const rateLimitCheck = checkRateLimit(currentUser.email || 'anonymous', 'create_post', 5, 15);
-    if (!rateLimitCheck.allowed) {
-      toast.error(`Too many posts! Please wait ${rateLimitCheck.resetIn} minutes.`);
-      return;
-    }
-
     setIsPosting(true);
     try {
-      // בדיקת תוכן מסוכן
-      if (content.trim()) {
-        const moderationResult = await moderateContent(content);
-        if (!moderationResult.safe) {
-          toast.error("Content blocked: This post contains inappropriate content that violates our community guidelines.");
-          
-          // דיווח למנהלים על תוכן מסוכן
-          if (moderationResult.severity === 'high') {
-            try {
-              await Notification.create({
-                recipient_email: 'admin@oneolam.com', // כתובת מנהל
-                sender_email: currentUser.email,
-                sender_name: currentUser.full_name,
-                type: 'dangerous_content',
-                content: `SECURITY ALERT: User ${currentUser.full_name} attempted to post dangerous content. Reason: ${moderationResult.reason}. Content: "${content.substring(0, 100)}..."`
-              });
-            } catch (notificationError) {
-              console.error('Failed to send security alert:', notificationError);
-            }
-          }
-          
-          setIsPosting(false);
-          return;
-        }
-      }
-
+      // Upload media only; all content moderation, rate-limiting and post
+      // creation happen server-side in the createPost backend function, so
+      // they cannot be bypassed by calling the SDK directly from the browser.
       let imageUrl = null;
       let videoUrl = null;
 
@@ -124,31 +94,33 @@ export const CreatePost = ({ onPostCreated, communityId = null, communityName = 
         videoUrl = file_url;
       }
 
-      // איסוף hashtags
-      const hashtags = content.match(/#[א-תa-zA-Z0-9_]+/g) || [];
-
-      // Create post with community association
-      await Post.create({
+      const res = await createPost({
         content: content.trim(),
         image_url: imageUrl,
         video_url: videoUrl,
-        author_name: currentUser.full_name, // Changed from 'user.full_name' to 'currentUser.full_name'
-        author_avatar: currentUser.avatar, // Changed from 'user.avatar' to 'currentUser.avatar'
-        tags: hashtags, // Changed from 'extractHashtags(content)' to 'hashtags'
-        community_id: communityId || null, // Added communityId
-        community_name: communityName || null // Added communityName
+        community_name: communityName || null
       });
 
-      toast.success(t('posted'));
-      setContent('');
-      setSelectedImage(null);
-      setSelectedVideo(null);
-      setPreviewUrl(null);
-      
-      if (onPostCreated) onPostCreated();
+      const data = res?.data;
+      if (data && data.success) {
+        toast.success(t('posted'));
+        setContent('');
+        setSelectedImage(null);
+        setSelectedVideo(null);
+        setPreviewUrl(null);
+        if (onPostCreated) onPostCreated();
+      } else {
+        throw new Error((data && data.error) || 'Could not create post');
+      }
     } catch (error) {
-      console.error('Error creating post:', error);
-      toast.error('Could not create post');
+      const errData = error?.response?.data || {};
+      if (errData.error === 'rate_limited') {
+        toast.error(`Too many posts! Please wait ${errData.resetIn || 15} minutes.`);
+      } else if (errData.error === 'content_blocked') {
+        toast.error("Content blocked: This post contains inappropriate content that violates our community guidelines.");
+      } else {
+        toast.error(error?.message || 'Could not create post');
+      }
     } finally {
       setIsPosting(false);
     }

@@ -6,6 +6,7 @@ import { PostCard } from '../components/shared/PostCard';
 import { UploadFile } from '@/integrations/Core';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { createPost as createPostServer } from "@/functions/createPost";
 
 export default function InterestCommunityPage({ interestName, interestColor, onBack }) {
   const [activeTab, setActiveTab] = useState('posts');
@@ -100,31 +101,35 @@ export default function InterestCommunityPage({ interestName, interestColor, onB
 
   const createPost = async () => {
     if (!newPost.trim() || !currentUser) return;
-    
+
     setIsPosting(true);
     try {
-      const postData = {
+      // Moderation + rate-limiting + creation run server-side (cannot be
+      // bypassed by calling the SDK directly from the browser console).
+      const res = await createPostServer({
         content: newPost,
-        author_name: currentUser.full_name,
-        author_avatar: currentUser.avatar,
-        community_name: interestName,
-        likes_count: 0,
-        comments_count: 0
-      };
+        image_url: postImage || null,
+        community_name: interestName
+      });
 
-      if (postImage) {
-        postData.image_url = postImage;
+      const data = res?.data;
+      if (data && data.success) {
+        setNewPost('');
+        setPostImage(null);
+        loadData();
+        toast.success("Post shared with the community!");
+      } else {
+        throw new Error((data && data.error) || 'Could not create post');
       }
-
-      await Post.create(postData);
-      setNewPost('');
-      setPostImage(null);
-      loadData(); // Refresh posts
-      toast.success("Post shared with the community!");
-
     } catch (error) {
-      console.error('Error creating post:', error);
-      toast.error('Could not create post. Please try again.');
+      const errData = error?.response?.data || {};
+      if (errData.error === 'rate_limited') {
+        toast.error(`Too many posts! Please wait ${errData.resetIn || 15} minutes.`);
+      } else if (errData.error === 'content_blocked') {
+        toast.error("Content blocked: This post contains inappropriate content that violates our community guidelines.");
+      } else {
+        toast.error('Could not create post. Please try again.');
+      }
     } finally {
       setIsPosting(false);
     }
