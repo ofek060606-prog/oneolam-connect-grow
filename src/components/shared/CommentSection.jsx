@@ -14,6 +14,18 @@ export const CommentSection = ({ postId, onCommentAdded }) => {
 
   const { t } = useTranslation();
 
+  // Server timestamps are UTC but may arrive without a timezone designator.
+  // Normalize to UTC so the browser doesn't treat them as local time and shift
+  // the relative time by the local UTC offset (e.g. "3 hours ago" for a post
+  // made moments ago in a UTC+3 timezone).
+  const formatCommentTime = (dateString) => {
+    if (!dateString) return t('justNow');
+    const normalized = /[Zz]|[+-]\d{2}:?\d{2}$/.test(dateString) ? dateString : dateString + 'Z';
+    const date = new Date(normalized);
+    if (Math.abs(Date.now() - date.getTime()) < 60 * 1000) return t('justNow');
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
+
   useEffect(() => {
     const fetchCommentsForPost = async () => {
       setIsLoading(true);
@@ -129,10 +141,7 @@ export const CommentSection = ({ postId, onCommentAdded }) => {
                   <div className="flex items-center space-x-2 mb-1">
                     <span className="font-medium text-slate-900 text-sm">{comment.author_name}</span>
                     <span className="text-slate-400 text-xs">
-                      {comment.created_date
-                        ? formatDistanceToNow(new Date(comment.created_date), { addSuffix: true })
-                        : t('justNow')
-                      }
+                      {formatCommentTime(comment.created_date)}
                     </span>
                   </div>
                   <p className="text-slate-700 text-sm">{comment.content}</p>

@@ -51,6 +51,14 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
   }, [t]);
 
 
+  // Optimistically reflect a newly-added comment on the count badge right
+  // away. loadUserInteractionsWithRetry is guarded by hasLoadedInteractions
+  // and would otherwise skip the refresh, leaving the badge stale.
+  const handleCommentAdded = useCallback(() => {
+    setCommentsCount(prev => prev + 1);
+  }, []);
+
+
   const loadUserInteractionsWithRetry = useCallback(async (user, retryCount = 0) => {
     if (hasLoadedInteractions) return;
     
@@ -433,7 +441,7 @@ export const PostCard = ({ post, onChatClick, onDelete }) => {
       {/* Comments */}
       {showComments && (
         <div className="border-t border-blue-50">
-          <CommentSection postId={post.id} currentUser={currentUser} onCommentAdded={loadUserInteractionsWithRetry} />
+          <CommentSection postId={post.id} currentUser={currentUser} onCommentAdded={handleCommentAdded} />
         </div>
       )}
     </div>
